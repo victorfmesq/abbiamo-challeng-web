@@ -34,6 +34,8 @@ Cada feature pode conter:
 - domain/ NÃO depende de React, React Query ou browser APIs.
 - shared NÃO depende de features.
 - Feature pode depender de shared, nunca o inverso.
+- src/services/httpClient.ts é o client singleton do projeto e contém o token storage (auth.token).
+- Features não instanciam client e não guardam token.
 
 ## Proibições
 

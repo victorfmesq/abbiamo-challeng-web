@@ -32,6 +32,9 @@
 - Hooks focados.
 - Funções puras para regra.
 - Imports via alias.
+- Services de feature chamam api.request(...) diretamente.
+- Proibido criar createHttpClient dentro de feature.
+- authService apenas chama /auth/login e NÃO gerencia token (token é infra).
 
 ## Anti-patterns
 

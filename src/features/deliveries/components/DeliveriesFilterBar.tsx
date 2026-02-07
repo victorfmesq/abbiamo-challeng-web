@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent } from 'react';
-import { Input, Button } from '@/shared/components';
+import { Input, Button, Select } from '@/shared/components';
 import type { DeliveryStatus } from '@/features/deliveries/types';
 import type { DeliveriesFilters } from '@/features/deliveries/domain/deliveriesFilters';
 
@@ -52,18 +52,15 @@ export function DeliveriesFilterBar({ filters, onFiltersChange }: DeliveriesFilt
             onChange={handleSearchChange}
           />
         </div>
-        {/* TODO: Extract to shared Select component */}
-        <select
-          value={status}
-          onChange={handleStatusChange}
-          className='rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500'
-        >
-          {statusOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        <div className='w-full sm:w-56'>
+          <Select value={status} onChange={handleStatusChange}>
+            {statusOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </Select>
+        </div>
       </div>
       {hasActiveFilters && (
         <Button variant='ghost' onClick={handleClearFilters}>

@@ -4,11 +4,9 @@ export type TableProps = HTMLAttributes<HTMLTableElement>;
 
 export function Table({ className = '', children, ...props }: TableProps) {
   return (
-    <div className='w-full min-w-full overflow-x-auto'>
-      <table className={`w-full min-w-full text-sm ${className}`} {...props}>
-        {children}
-      </table>
-    </div>
+    <table className={`w-full min-w-full text-sm ${className}`} {...props}>
+      {children}
+    </table>
   );
 }
 
@@ -18,7 +16,7 @@ export function Thead({
   ...props
 }: HTMLAttributes<HTMLTableSectionElement>) {
   return (
-    <thead className={`bg-slate-800/50 sticky top-0 z-10 ${className}`} {...props}>
+    <thead className={`bg-slate-800/50 ${className}`} {...props}>
       {children}
     </thead>
   );
@@ -52,7 +50,7 @@ export function Tr({ hover = true, className = '', ...props }: TrProps) {
 export function Th({ className = '', children, ...props }: ThHTMLAttributes<HTMLTableCellElement>) {
   return (
     <th
-      className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400 ${className}`}
+      className={`sticky top-0 z-10 bg-slate-800 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400 shadow-sm ${className}`}
       {...props}
     >
       {children}

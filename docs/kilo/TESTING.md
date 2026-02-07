@@ -1,3 +1,8 @@
+Este documento é NORMATIVO.
+
+Qualquer código gerado por IA que viole estas regras
+deve ser considerado incorreto e incompleto.
+
 Este documento define os critérios mínimos de qualidade
 esperados em qualquer implementação gerada por IA.
 
@@ -11,6 +16,38 @@ Toda função agnóstica deve ter teste unitário.
 
 Funções puras, helpers de domínio e lógica de negócio
 DEVEM possuir testes unitários.
+
+## Organização dos Testes
+
+### Diretório `src/__tests__/`
+
+Os testes são organizados em `src/__tests__/` espelhando o path do código testado.
+
+```
+src/
+├── __tests__/
+│   ├── app/router/AppRouter.test.tsx      # teste de AppRouter
+│   └── features/deliveries/domain/deliveriesFilters.test.ts
+├── app/router/AppRouter.tsx
+└── features/deliveries/domain/deliveriesFilters.ts
+```
+
+**Regras:**
+
+- Usar alias `@/...` nos imports (ex: `@/features/auth/hooks/useAuth`)
+- NÃO usar caminhos relativos nos imports de código fonte
+- Manter a estrutura de pastas espelhando o código testado
+
+### Arquivos de teste na mesma pasta (legado)
+
+Arquivos de teste existentes na mesma pasta do código (ex: `src/App.test.tsx`) são permitidos
+para testes simples de componentes ou arquivos já existentes, mas novos testes DEVEM seguir
+o padrão `src/__tests__/`.
+
+Este documento é NORMATIVO.
+
+Qualquer código gerado por IA que viole estas regras
+deve ser considerado incorreto e incompleto.
 
 ## Unit (Vitest)
 

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import { CatchAllRoute } from './AppRouter';
+import { CatchAllRoute } from '@/app/router/AppRouter';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 
 // Mock the useAuth hook

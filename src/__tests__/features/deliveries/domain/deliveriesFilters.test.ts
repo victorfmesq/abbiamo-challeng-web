@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { normalizeDeliveriesFilters, toDeliveriesQueryParams } from './deliveriesFilters';
+import {
+  normalizeDeliveriesFilters,
+  toDeliveriesQueryParams,
+} from '@/features/deliveries/domain/deliveriesFilters';
 
 describe('deliveriesFilters', () => {
   it('normaliza page/limit e remove search vazia', () => {

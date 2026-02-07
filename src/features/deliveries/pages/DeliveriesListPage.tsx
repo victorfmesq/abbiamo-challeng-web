@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Button, TablePagination } from '@/shared/components';
+import { Card, Button, TablePagination, Checkbox, Badge } from '@/shared/components';
 import { DeliveriesFilterBar } from '../components/DeliveriesFilterBar';
 import { DeliveriesTable } from '../components/DeliveriesTable';
 import { useDeliveries } from '../hooks/useDeliveries';
 import type { DeliveriesFilters } from '../domain/deliveriesFilters';
-import type { DeliveryDto } from '../types';
+import type { DeliveryDto } from '@/features/deliveries/types';
 
 const defaultFilters: DeliveriesFilters = {
   page: 1,
@@ -15,6 +15,7 @@ const defaultFilters: DeliveriesFilters = {
 export function DeliveriesListPage() {
   const navigate = useNavigate();
   const [filters, setFilters] = useState<DeliveriesFilters>(defaultFilters);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const { data, isLoading, isError, error, refetch } = useDeliveries(filters);
 
   const handleFiltersChange = (newFilters: DeliveriesFilters) => {
@@ -34,13 +35,59 @@ export function DeliveriesListPage() {
     setFilters({ ...filters, limit: newLimit, page: 1 });
   };
 
+  const handleToggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const handleToggleSelectAll = () => {
+    const currentPageIds = data?.data.map((d) => d.id) || [];
+    const allSelected =
+      currentPageIds.length > 0 && currentPageIds.every((id) => selectedIds.has(id));
+
+    if (allSelected) {
+      // Deselect ALL items (clear entire state)
+      setSelectedIds(new Set());
+    } else {
+      // Select all items from current page
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        currentPageIds.forEach((id) => next.add(id));
+        return next;
+      });
+    }
+  };
+
+  const selectAllState = useMemo(() => {
+    const currentPageIds = data?.data.map((d) => d.id) || [];
+
+    if (currentPageIds.length === 0) return 'none' as const;
+
+    const allSelected = currentPageIds.every((id) => selectedIds.has(id));
+    const someSelected = currentPageIds.some((id) => selectedIds.has(id));
+
+    if (allSelected) return 'full' as const;
+    if (someSelected) return 'partial' as const;
+
+    return 'none' as const;
+  }, [data?.data, selectedIds]);
+
   if (isError) {
     return (
       <Card className='flex flex-col items-center justify-center gap-4 py-12'>
         <p className='text-rose-400'>Erro ao carregar entregas</p>
+
         <p className='text-slate-400 text-sm'>
           {error instanceof Error ? error.message : 'Erro desconhecido'}
         </p>
+
         <Button onClick={() => refetch()}>Tentar novamente</Button>
       </Card>
     );
@@ -51,6 +98,7 @@ export function DeliveriesListPage() {
       {/* Header */}
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
         <h1 className='text-2xl font-bold text-slate-100'>Entregas</h1>
+
         <Button onClick={() => refetch()}>Atualizar</Button>
       </div>
 
@@ -79,20 +127,40 @@ export function DeliveriesListPage() {
                     stroke='currentColor'
                     strokeWidth='4'
                   />
+
                   <path
                     className='opacity-75'
                     fill='currentColor'
                     d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
                   />
                 </svg>
+
                 <span>Carregando...</span>
               </div>
             </div>
           ) : (
             <div className='flex flex-col flex-1 min-h-0'>
+              {/* Toolbar with Select All and actions */}
+              <div className='flex items-center justify-between px-4 py-2 border-b border-slate-700 shrink-0 h-12'>
+                <div className='flex items-center gap-3 h-6'>
+                  <Checkbox
+                    state={selectAllState}
+                    onChange={handleToggleSelectAll}
+                    label='Selecionar tudo'
+                  />
+                  {selectedIds.size > 0 && <Badge variant='info'>{selectedIds.size}</Badge>}
+                </div>
+                {/* Future: Bulk actions would go here */}
+              </div>
+
               {/* Table with internal scroll */}
               <div className='overflow-auto min-h-0 flex-1'>
-                <DeliveriesTable deliveries={data?.data || []} onRowClick={handleRowClick} />
+                <DeliveriesTable
+                  deliveries={data?.data || []}
+                  selectedIds={selectedIds}
+                  onRowClick={handleRowClick}
+                  onToggleSelect={handleToggleSelect}
+                />
               </div>
 
               {/* Pagination Footer */}

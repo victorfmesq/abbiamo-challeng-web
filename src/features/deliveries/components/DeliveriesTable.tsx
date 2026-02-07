@@ -1,10 +1,12 @@
-import { Table, Thead, Tbody, Tr, Th, Td, Badge } from '@/shared/components';
+import { Table, Thead, Tbody, Tr, Th, Td, Badge, Checkbox } from '@/shared/components';
 import type { DeliveryDto, DeliveryStatus } from '@/features/deliveries/types';
 import { formatIsoToLocale } from '@/shared/utils/date';
 
 interface DeliveriesTableProps {
   deliveries: DeliveryDto[];
+  selectedIds: Set<string>;
   onRowClick?: (delivery: DeliveryDto) => void;
+  onToggleSelect: (id: string) => void;
 }
 
 const statusConfig: Record<
@@ -19,7 +21,12 @@ const statusConfig: Record<
   FAILED: { variant: 'danger', label: 'Falhou' },
 };
 
-export function DeliveriesTable({ deliveries, onRowClick }: DeliveriesTableProps) {
+export function DeliveriesTable({
+  deliveries,
+  selectedIds,
+  onRowClick,
+  onToggleSelect,
+}: DeliveriesTableProps) {
   if (deliveries.length === 0) {
     return (
       <div className='flex items-center justify-center py-12'>
@@ -32,6 +39,7 @@ export function DeliveriesTable({ deliveries, onRowClick }: DeliveriesTableProps
     <Table>
       <Thead>
         <Tr>
+          <Th className='w-12'></Th>
           <Th>Código</Th>
           <Th>Destinatário</Th>
           <Th>Status</Th>
@@ -41,12 +49,20 @@ export function DeliveriesTable({ deliveries, onRowClick }: DeliveriesTableProps
       <Tbody>
         {deliveries.map((delivery) => {
           const status = statusConfig[delivery.status];
+          const isSelected = selectedIds.has(delivery.id);
           return (
             <Tr
               key={delivery.id}
               onClick={() => onRowClick?.(delivery)}
               className={onRowClick ? 'cursor-pointer' : ''}
             >
+              <Td onClick={(e) => e.stopPropagation()}>
+                <Checkbox
+                  state={isSelected ? 'full' : 'none'}
+                  onChange={() => onToggleSelect(delivery.id)}
+                  aria-label={`Selecionar entrega ${delivery.tracking_code}`}
+                />
+              </Td>
               <Td className='font-mono text-sm'>{delivery.tracking_code}</Td>
               <Td>{delivery.recipient.name}</Td>
               <Td>

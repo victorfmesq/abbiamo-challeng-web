@@ -44,10 +44,13 @@ export function createHttpClient(config: HttpClientConfig) {
       : await res.text().catch(() => undefined);
 
     if (!res.ok) {
-      const msg =
-        typeof payload === 'object' && payload && 'message' in (payload as any)
-          ? String((payload as any).message)
-          : `Request failed: ${res.status}`;
+      let msg = `Request failed: ${res.status}`;
+      if (typeof payload === 'object' && payload !== null) {
+        const messagePayload = payload as Record<string, unknown>;
+        if ('message' in messagePayload && typeof messagePayload.message === 'string') {
+          msg = messagePayload.message;
+        }
+      }
       throw new HttpError(msg, res.status, payload);
     }
 

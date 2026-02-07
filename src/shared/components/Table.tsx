@@ -1,10 +1,8 @@
 import type { HTMLAttributes, ThHTMLAttributes, TdHTMLAttributes } from 'react';
 
-export interface TableProps extends HTMLAttributes<HTMLTableElement> {
-  showHover?: boolean;
-}
+export type TableProps = HTMLAttributes<HTMLTableElement>;
 
-export function Table({ showHover = true, className = '', children, ...props }: TableProps) {
+export function Table({ className = '', children, ...props }: TableProps) {
   return (
     <div className='overflow-x-auto rounded-xl border border-slate-700 bg-slate-900'>
       <table className={`w-full text-sm ${className}`} {...props}>

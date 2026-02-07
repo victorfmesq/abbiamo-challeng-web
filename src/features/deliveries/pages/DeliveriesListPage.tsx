@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Button } from '@/shared/components';
+import { Card, Button, TablePagination } from '@/shared/components';
 import { DeliveriesFilterBar } from '../components/DeliveriesFilterBar';
 import { DeliveriesTable } from '../components/DeliveriesTable';
 import { useDeliveries } from '../hooks/useDeliveries';
@@ -25,6 +25,15 @@ export function DeliveriesListPage() {
     navigate(`/deliveries/${delivery.id}`);
   };
 
+  const handlePageChange = (newPage: number) => {
+    setFilters({ ...filters, page: newPage });
+  };
+
+  const handleLimitChange = (newLimit: number) => {
+    // Reset to first page when limit changes
+    setFilters({ ...filters, limit: newLimit, page: 1 });
+  };
+
   if (isError) {
     return (
       <Card className='flex flex-col items-center justify-center gap-4 py-12'>
@@ -38,69 +47,70 @@ export function DeliveriesListPage() {
   }
 
   return (
-    <div className='space-y-6'>
-      <div className='flex items-center justify-between'>
+    <div className='flex flex-col flex-1 min-h-0 gap-6'>
+      {/* Header */}
+      <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
         <h1 className='text-2xl font-bold text-slate-100'>Entregas</h1>
         <Button onClick={() => refetch()}>Atualizar</Button>
       </div>
 
-      <Card className='p-4'>
+      {/* Filters - Stack on mobile, inline on desktop */}
+      <Card className='p-4 shrink-0'>
         <DeliveriesFilterBar filters={filters} onFiltersChange={handleFiltersChange} />
       </Card>
 
-      {isLoading ? (
-        <Card className='flex items-center justify-center py-12'>
-          <div className='flex items-center gap-2 text-slate-400'>
-            <svg
-              className='h-5 w-5 animate-spin'
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-            >
-              <circle
-                className='opacity-25'
-                cx='12'
-                cy='12'
-                r='10'
-                stroke='currentColor'
-                strokeWidth='4'
-              />
-              <path
-                className='opacity-75'
-                fill='currentColor'
-                d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
-              />
-            </svg>
-            <span>Carregando...</span>
-          </div>
-        </Card>
-      ) : (
-        <DeliveriesTable deliveries={data?.data || []} onRowClick={handleRowClick} />
-      )}
+      {/* Table Container - Controlled height with flex layout */}
+      <div className='flex flex-col flex-1 min-h-0'>
+        <Card className='flex flex-col min-h-0 overflow-hidden'>
+          {isLoading ? (
+            <div className='flex flex-1 items-center justify-center py-12'>
+              <div className='flex items-center gap-2 text-slate-400'>
+                <svg
+                  className='h-5 w-5 animate-spin'
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                >
+                  <circle
+                    className='opacity-25'
+                    cx='12'
+                    cy='12'
+                    r='10'
+                    stroke='currentColor'
+                    strokeWidth='4'
+                  />
+                  <path
+                    className='opacity-75'
+                    fill='currentColor'
+                    d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
+                  />
+                </svg>
+                <span>Carregando...</span>
+              </div>
+            </div>
+          ) : (
+            <div className='flex flex-col flex-1 min-h-0'>
+              {/* Table with internal scroll */}
+              <div className='overflow-auto min-h-0 flex-1'>
+                <DeliveriesTable deliveries={data?.data || []} onRowClick={handleRowClick} />
+              </div>
 
-      {data && data.total > 0 && (
-        <div className='flex items-center justify-between text-sm text-slate-400'>
-          <span>
-            Mostrando {data.data.length} de {data.total} entregas
-          </span>
-          <div className='flex gap-2'>
-            <Button
-              variant='ghost'
-              disabled={filters.page === 1}
-              onClick={() => setFilters({ ...filters, page: (filters.page || 1) - 1 })}
-            >
-              Anterior
-            </Button>
-            <Button
-              variant='ghost'
-              disabled={filters.page === data.totalPages}
-              onClick={() => setFilters({ ...filters, page: (filters.page || 1) + 1 })}
-            >
-              Proximo
-            </Button>
-          </div>
-        </div>
-      )}
+              {/* Pagination Footer */}
+              {data && data.meta.total > 0 && (
+                <TablePagination
+                  page={data.meta.page}
+                  totalPages={data.meta.totalPages}
+                  total={data.meta.total}
+                  limit={data.meta.limit}
+                  onPageChange={handlePageChange}
+                  onLimitChange={handleLimitChange}
+                  isLoading={isLoading}
+                />
+              )}
+            </div>
+          )}
+        </Card>
+      </div>
     </div>
   );
 }

@@ -51,9 +51,12 @@ export type DeliveryDto = {
 
 export type PaginatedDeliveriesResponseDto = {
   data: DeliveryDto[];
-  total: number;
-  page: number;
-  totalPages: number;
+  meta: {
+    limit: number;
+    total: number;
+    page: number;
+    totalPages: number;
+  };
 };
 
 export type DeliveryStatsDto = {

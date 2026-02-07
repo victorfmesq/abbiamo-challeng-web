@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { RequireAuth } from './RequireAuth';
 import { LoginPage } from '@/features/auth/pages/LoginPage';
 import { AppShell } from '@/app/layouts/AppShell';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 
 function DashboardPage() {
   return (
@@ -30,6 +31,18 @@ function DeliveryDetailPage() {
   );
 }
 
+export function CatchAllRoute() {
+  const { isAuthenticated } = useAuth();
+
+  // Unauthenticated: redirect to login
+  if (!isAuthenticated) {
+    return <Navigate to='/login' replace />;
+  }
+
+  // Authenticated: redirect to dashboard
+  return <Navigate to='/dashboard' replace />;
+}
+
 export function AppRouter() {
   return (
     <Routes>
@@ -47,6 +60,7 @@ export function AppRouter() {
         <Route path='deliveries' element={<DeliveriesPage />} />
         <Route path='deliveries/:id' element={<DeliveryDetailPage />} />
       </Route>
+      <Route path='*' element={<CatchAllRoute />} />
     </Routes>
   );
 }

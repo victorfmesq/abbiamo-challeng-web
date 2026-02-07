@@ -6,6 +6,31 @@ import App from './App';
 import * as httpClient from '@/services/httpClient';
 import * as session from '@/features/auth/services/session';
 
+// Setup mocks before importing components
+vi.mock('@/services/httpClient', async () => {
+  const actual = await vi.importActual('@/services/httpClient');
+  return {
+    ...actual,
+    authStorage: {
+      getToken: vi.fn(),
+      setToken: vi.fn(),
+      clear: vi.fn(),
+    },
+  };
+});
+
+vi.mock('@/features/auth/services/session', async () => {
+  const actual = await vi.importActual('@/features/auth/services/session');
+  return {
+    ...actual,
+    session: {
+      getUser: vi.fn(),
+      setUser: vi.fn(),
+      clear: vi.fn(),
+    },
+  };
+});
+
 describe('App', () => {
   let queryClient: QueryClient;
 

@@ -22,10 +22,11 @@ const getInitialAuth = (): { status: AuthStatus; user: AuthUser | null } => {
     if (token && savedUser) {
       return { status: 'authenticated', user: savedUser };
     }
+    // No token found, user is not authenticated
+    return { status: 'unauthenticated', user: null };
   } catch {
-    // empty
+    return { status: 'unauthenticated', user: null };
   }
-  return { status: 'checking', user: null };
 };
 
 const initialAuth = getInitialAuth();

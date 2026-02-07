@@ -15,3 +15,6 @@ export type { SelectProps } from './Select';
 
 export { Table, Thead, Tbody, Tr, Th, Td } from './Table';
 export type { TableProps, TrProps } from './Table';
+
+export { TablePagination, TableWithPagination } from './TablePagination';
+export type { TablePaginationProps, TableWithPaginationProps } from './TablePagination';

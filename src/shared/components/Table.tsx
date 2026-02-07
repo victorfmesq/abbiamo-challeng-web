@@ -4,8 +4,8 @@ export type TableProps = HTMLAttributes<HTMLTableElement>;
 
 export function Table({ className = '', children, ...props }: TableProps) {
   return (
-    <div className='overflow-x-auto rounded-xl border border-slate-700 bg-slate-900'>
-      <table className={`w-full text-sm ${className}`} {...props}>
+    <div className='w-full min-w-full overflow-x-auto'>
+      <table className={`w-full min-w-full text-sm ${className}`} {...props}>
         {children}
       </table>
     </div>
@@ -18,7 +18,7 @@ export function Thead({
   ...props
 }: HTMLAttributes<HTMLTableSectionElement>) {
   return (
-    <thead className={`bg-slate-800/50 ${className}`} {...props}>
+    <thead className={`bg-slate-800/50 sticky top-0 z-10 ${className}`} {...props}>
       {children}
     </thead>
   );

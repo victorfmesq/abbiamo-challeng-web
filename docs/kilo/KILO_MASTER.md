@@ -1,3 +1,16 @@
+⚠️ ATIVAÇÃO OBRIGATÓRIA
+
+Este arquivo é o ponto de entrada do projeto para agentes de IA.
+
+Qualquer agente de IA que receba uma tarefa DEVE:
+
+1. Ler este arquivo primeiro
+2. Seguir todas as regras aqui descritas
+3. Consultar os documentos aqui referenciados antes de escrever código
+
+Se este arquivo não for explicitamente referenciado no prompt,
+as regras aqui contidas NÃO são consideradas carregadas.
+
 ⚠️ FONTE DE VERDADE DO PROJETO
 
 Este diretório (docs/kilo) define os padrões globais, decisões
@@ -87,12 +100,19 @@ Antes de implementar qualquer tarefa:
 - NÃO misturar regra de negócio com UI.
 - Qualquer função agnóstica deve ter teste unitário.
 - Reutilizar componentes do `shared` antes de criar novos.
-- Priorizar clareza e previsibilidade sobre “arquitetura perfeita”.
+- Priorizar clareza e previsibilidade sobre "arquitetura perfeita".
 
 ## Ativação da Documentação (uso obrigatório em prompts)
 
 Todo novo chat com um agente de IA DEVE iniciar com um prompt
 que aponte explicitamente para este diretório (docs/kilo)
 e para este arquivo (KILO_MASTER.md).
+
+**Prompt de ativação obrigatório:**
+
+```
+Use o projeto conforme definido em docs/kilo/KILO_MASTER.md.
+Implemente a tarefa abaixo seguindo estritamente essas regras.
+```
 
 Sem isso, esta documentação não é considerada carregada.

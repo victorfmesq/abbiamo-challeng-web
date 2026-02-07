@@ -1,107 +1,151 @@
-# React + TypeScript + Vite
+# Abbiamo Challenge Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Dashboard web para monitoramento de entregas logísticas, desenvolvido como desafio técnico frontend.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React 18** + **Vite** + **TypeScript** (strict)
+- **Tailwind CSS**
+- **TanStack React Query**
+- **React Hook Form** (sem Zod)
+- **Vitest** + Testing Library (unit tests)
+- **Playwright** (E2E tests)
 
-## Environment Variables
+## Como Rodar
 
-This project uses Vite's environment variable system. Variables must be prefixed with `VITE_` to be exposed to the client.
+### Instalação
 
-### Setup for Development
+```bash
+npm install
+```
 
-1. Copy the example environment file:
+### Desenvolvimento
+
+```bash
+npm run dev
+```
+
+A aplicação estará disponível em `http://localhost:5173`
+
+### Testes Unitários
+
+```bash
+npm run test        # executar testes uma vez
+npm run test:watch  # modo watch
+```
+
+### Testes E2E
+
+```bash
+npm run e2e
+```
+
+### Linting e Formatação
+
+```bash
+npm run lint        # verificar erros
+npm run format      # formatar código
+```
+
+## Configuração de Ambiente
+
+1. Copie o arquivo de exemplo:
 
 ```bash
 cp .env.example .env.local
 ```
 
-2. The mock API server runs at `http://localhost:4000`
+2. A API mock roda em `http://localhost:4000`
 
-### Available Variables
+### Variáveis de Ambiente
 
-| Variable            | Description                  | Default (Dev)           |
-| ------------------- | ---------------------------- | ----------------------- |
-| `VITE_API_BASE_URL` | Base URL for the API backend | `http://localhost:4000` |
+| Variável            | Descrição       | Padrão (Dev)            |
+| ------------------- | --------------- | ----------------------- |
+| `VITE_API_BASE_URL` | URL base da API | `http://localhost:4000` |
 
-### Deployment
+---
 
-For production or staging deployments, configure the environment variables in your hosting provider:
+## Documentação do Projeto
 
-- **Vercel**: Set in Project Settings > Environment Variables
-- **Netlify**: Set in Site Settings > Environment Variables
-- **Other**: Set as system environment variables or in your CI/CD pipeline
+Este projeto utiliza uma documentação estruturada em `docs/kilo/` para orientar o desenvolvimento, especialmente agentes de IA stateless.
 
-Example for Vercel:
+### Estrutura da Documentação
 
 ```
-VITE_API_BASE_URL=https://your-production-api.com
+docs/kilo/
+├── KILO_MASTER.md        # Ponto de entrada - OBRIGATÓRIO ler primeiro
+├── AI_OPERATION_MODE.md  # Regras de operação da IA
+├── ARCHITECTURE.md        # Arquitetura oficial do projeto
+├── TOOLS_AND_PATTERNS.md # Stack e padrões de código
+├── UX_UI_AND_ATOMIC.md   # Guidelines de UI/UX
+├── DESIGN_SYSTEM.md      # Sistema de design
+├── FLOWS.md              # Fluxos do produto
+└── TESTING.md            # Padrões de teste
 ```
 
-## React Compiler
+### Regra Importante
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**docs/kilo/KILO_MASTER.md** é a **fonte de verdade** do projeto. Antes de implementar qualquer tarefa, agentes de IA DEVEM consultar este arquivo e os documentos referenciados nele.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Como Usar Agentes de IA Stateless
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Este projeto foi projetado para ser desenvolvido com auxílio de agentes de IA que não mantêm estado entre sessões.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Prompt de Ativação (OBRIGATÓRIO)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+**Todo novo prompt deve iniciar com:**
+
+```
+Use o projeto conforme definido em docs/kilo/KILO_MASTER.md.
+Implemente a tarefa abaixo seguindo estritamente essas regras.
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Comportamento Esperado do Agente
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+Ao receber uma tarefa, o agente DEVE:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+1. **Ler KILO_MASTER.md** primeiro
+2. **Identificar documentos relevantes** para a tarefa
+3. **Consultar explicitamente** esses documentos antes de escrever código
+4. **Internlizar os arquivos lidos** - ao final de cada resposta, o agente deve mostrar silenciosamente no output os arquivos que leu e processou
+
+### Exemplo de Uso
+
 ```
+Use o projeto conforme definido em docs/kilo/KILO_MASTER.md.
+Implemente a tarefa abaixo seguindo estritamente essas regras.
+
+Tarefa: Criar componente de login
+```
+
+### Output Silencioso de Auditoria
+
+Para fins de auditoria e rastreabilidade, o agente deve sempre indicar ao final de cada resposta quais arquivos foram lidos e internalizados:
+
+```
+╔══════════════════════════════════════════════════════════════╗
+║                    ARQUIVOS INTERNLIZADOS                    ║
+╠══════════════════════════════════════════════════════════════╣
+║  📄 docs/kilo/KILO_MASTER.md                                 ║
+║  📄 docs/kilo/ARCHITECTURE.md                                ║
+║  📄 src/features/auth/services/authService.ts                ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+Esta informação deve ser exibida de forma discreta ao final da resposta, sem interromper o fluxo principal da comunicação.
+
+### Regras Invioláveis para IA
+
+- ❌ NÃO usar Zod ou validação por schema
+- ❌ NÃO criar abstrações genéricas excessivas
+- ❌ NÃO misturar regra de negócio com UI
+- ❌ NÃO ser arquiteto do sistema
+- ❌ NÃO decidir stack
+- ❌ NÃO criar padrões novos
+
+- ✅ Criar testes unitários para funções agnósticas
+- ✅ Reutilizar componentes do `shared/`
+- ✅ Seguir arquitetura definida em `docs/kilo/`
+- ✅ Priorizar clareza sobre "arquitetura perfeita"

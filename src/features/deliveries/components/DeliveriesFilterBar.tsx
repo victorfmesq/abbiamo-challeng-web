@@ -1,7 +1,7 @@
-import { useState, type ChangeEvent } from 'react';
+import { useState, useEffect, type ChangeEvent } from 'react';
 import { Input, Button, Select } from '@/shared/components';
 import type { DeliveryStatus } from '@/features/deliveries/types';
-import type { DeliveriesFilters } from '@/features/deliveries/domain/deliveriesFilters';
+import type { DeliveriesFilters } from '../domain/deliveriesFilters';
 
 interface DeliveriesFilterBarProps {
   filters: DeliveriesFilters;
@@ -18,14 +18,37 @@ const statusOptions: { value: DeliveryStatus | 'all'; label: string }[] = [
   { value: 'FAILED', label: 'Falhou' },
 ];
 
+const SEARCH_DEBOUNCE_MS = 1000;
+
 export function DeliveriesFilterBar({ filters, onFiltersChange }: DeliveriesFilterBarProps) {
   const [search, setSearch] = useState(filters.search || '');
   const [status, setStatus] = useState<DeliveryStatus | 'all'>(filters.status || 'all');
+  const [searchTimeout, setSearchTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
+    };
+  }, [searchTimeout]);
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
-    onFiltersChange({ ...filters, search: value || undefined, page: 1 });
+
+    // Clear existing timeout if user keeps typing
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+
+    // Set new timeout - will trigger onFiltersChange after 1.5s of no typing
+    const timeout = setTimeout(() => {
+      onFiltersChange({ ...filters, search: value || undefined, page: 1 });
+    }, SEARCH_DEBOUNCE_MS);
+
+    setSearchTimeout(timeout);
   };
 
   const handleStatusChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -37,6 +60,11 @@ export function DeliveriesFilterBar({ filters, onFiltersChange }: DeliveriesFilt
   const handleClearFilters = () => {
     setSearch('');
     setStatus('all');
+    // Clear any pending search timeout
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+      setSearchTimeout(null);
+    }
     onFiltersChange({ page: 1, limit: filters.limit });
   };
 

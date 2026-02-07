@@ -35,7 +35,9 @@ A decisão de redirecionamento considera:
 - Consumir /deliveries
 - Filtros por status, data e busca
 - Paginação server-side
-- Seleção múltipla + ações em massa
+- **Seleção múltipla:** Checkbox por linha + "Selecionar tudo" com estados full/partial/none
+- **Toolbar de seleção:** Badge com contador visível quando há itens selecionados
+- Seleção persiste entre páginas (mantida via Set<string>)
 
 ## Ações em Massa
 

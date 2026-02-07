@@ -56,6 +56,7 @@
 - [`Button`](src/shared/components/Button.tsx) — primary | secondary | ghost | destructive
 - [`Input`](src/shared/components/Input.tsx)
 - [`Badge`](src/shared/components/Badge.tsx) — por status
+- [`Checkbox`](src/shared/components/Checkbox.tsx) — com suporte a estados 'none' | 'partial' | 'full'
 - [`Spinner`](src/shared/components/Spinner.tsx)
 - [`Alert`](src/shared/components/Alert.tsx)
 

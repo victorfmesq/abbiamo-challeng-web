@@ -27,9 +27,13 @@ Os testes são organizados em `src/__tests__/` espelhando o path do código test
 src/
 ├── __tests__/
 │   ├── app/router/AppRouter.test.tsx      # teste de AppRouter
-│   └── features/deliveries/domain/deliveriesFilters.test.ts
+│   ├── features/deliveries/
+│   │   ├── components/DeliveriesTable.test.tsx    # teste do componente de tabela com seleção
+│   │   └── domain/deliveriesFilters.test.ts
 ├── app/router/AppRouter.tsx
-└── features/deliveries/domain/deliveriesFilters.ts
+└── features/deliveries/
+    ├── components/DeliveriesTable.tsx
+    └── domain/deliveriesFilters.ts
 ```
 
 **Regras:**
@@ -59,7 +63,9 @@ Testar:
 
 ## UI
 
-- Componentes críticos (FilterBar, BulkActionsBar)
+- Componentes críticos:
+  - [`DeliveriesTable`](src/__tests__/features/deliveries/components/DeliveriesTable.test.tsx) — seleção múltipla, checkbox states, interação de linha
+  - FilterBar, BulkActionsBar
 
 ## E2E (Playwright)
 

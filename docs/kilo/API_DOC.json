@@ -1,0 +1,1043 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas"
+          }
+        },
+        "summary": "Endpoint de autenticação (mock)",
+        "tags": [
+          "Autenticação"
+        ]
+      }
+    },
+    "/deliveries": {
+      "get": {
+        "operationId": "DeliveriesController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Número da página",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Itens por página",
+            "schema": {
+              "minimum": 1,
+              "default": 10,
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "description": "Campo para ordenação",
+            "schema": {
+              "enum": [
+                "tracking_code",
+                "status",
+                "expected_delivery_at",
+                "created_at"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Ordem de classificação",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Filtrar por status",
+            "schema": {
+              "enum": [
+                "PENDING",
+                "DISPATCHED",
+                "IN_ROUTE",
+                "DELIVERED",
+                "DELAYED",
+                "FAILED",
+                "all"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Buscar por código de rastreio ou nome do destinatário",
+            "schema": {
+              "example": "BR123456789",
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateFrom",
+            "required": false,
+            "in": "query",
+            "description": "Filtrar por data de previsão de entrega a partir de (ISO 8601)",
+            "schema": {
+              "example": "2024-01-01T00:00:00Z",
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateTo",
+            "required": false,
+            "in": "query",
+            "description": "Filtrar por data de previsão de entrega até (ISO 8601)",
+            "schema": {
+              "example": "2024-12-31T23:59:59Z",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna entregas paginadas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedDeliveriesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Obter lista paginada de entregas com filtros e ordenação",
+        "tags": [
+          "Entregas"
+        ]
+      }
+    },
+    "/deliveries/stats": {
+      "get": {
+        "operationId": "DeliveriesController_getStats",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Retorna estatísticas de entregas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryStatsDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Obter KPIs e estatísticas sobre as entregas",
+        "tags": [
+          "Entregas"
+        ]
+      }
+    },
+    "/deliveries/bulk/reschedule": {
+      "patch": {
+        "operationId": "DeliveriesController_bulkReschedule",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkRescheduleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Entregas reagendadas com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkOperationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Reagendar múltiplas entregas em massa",
+        "tags": [
+          "Entregas"
+        ]
+      }
+    },
+    "/deliveries/bulk/assign-driver": {
+      "patch": {
+        "operationId": "DeliveriesController_bulkAssignDriver",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkAssignDriverDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Motorista atribuído com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkOperationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Atribuir motorista para múltiplas entregas em massa",
+        "tags": [
+          "Entregas"
+        ]
+      }
+    },
+    "/deliveries/bulk/priority": {
+      "patch": {
+        "operationId": "DeliveriesController_bulkUpdatePriority",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkUpdatePriorityDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Prioridade atualizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkOperationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Atualizar prioridade de múltiplas entregas em massa",
+        "tags": [
+          "Entregas"
+        ]
+      }
+    },
+    "/deliveries/{id}": {
+      "get": {
+        "operationId": "DeliveriesController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna detalhes da entrega",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entrega não encontrada"
+          }
+        },
+        "summary": "Obter informações detalhadas sobre uma entrega específica",
+        "tags": [
+          "Entregas"
+        ]
+      }
+    },
+    "/drivers": {
+      "get": {
+        "operationId": "DriversController_findAll",
+        "parameters": [
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Filtrar motoristas por status",
+            "schema": {
+              "enum": [
+                "AVAILABLE",
+                "BUSY",
+                "OFFLINE"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna lista de motoristas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DriversListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Obter lista de motoristas",
+        "tags": [
+          "Motoristas"
+        ]
+      }
+    },
+    "/drivers/{id}": {
+      "get": {
+        "operationId": "DriversController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna detalhes do motorista",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DriverDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Motorista não encontrado"
+          }
+        },
+        "summary": "Obter informações detalhadas de um motorista",
+        "tags": [
+          "Motoristas"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "API de Entregas Abbiamo",
+    "description": "API Mock para o Desafio Técnico Frontend da Abbiamo. Esta API simula um sistema de monitoramento de entregas com atualizações em tempo real via WebSocket.",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "operador@abbiamo.com",
+            "description": "Endereço de e-mail do usuário"
+          },
+          "password": {
+            "type": "string",
+            "example": "abbiamo2024",
+            "description": "Senha do usuário (mínimo 6 caracteres)",
+            "minLength": 6
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "LoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Token JWT para autenticação",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "user": {
+            "type": "object",
+            "description": "Informações do usuário autenticado",
+            "example": {
+              "id": "1",
+              "name": "Operador Logístico",
+              "email": "operador@abbiamo.com",
+              "role": "operator"
+            }
+          }
+        },
+        "required": [
+          "token",
+          "user"
+        ]
+      },
+      "CoordinatesDto": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "number",
+            "description": "Latitude da localização",
+            "example": -23.5505
+          },
+          "lng": {
+            "type": "number",
+            "description": "Longitude da localização",
+            "example": -46.6333
+          }
+        },
+        "required": [
+          "lat",
+          "lng"
+        ]
+      },
+      "AddressDto": {
+        "type": "object",
+        "properties": {
+          "street": {
+            "type": "string",
+            "description": "Nome da rua",
+            "example": "Rua das Flores"
+          },
+          "number": {
+            "type": "string",
+            "description": "Número do endereço",
+            "example": "123"
+          },
+          "complement": {
+            "type": "string",
+            "description": "Complemento do endereço",
+            "example": "Apto 45"
+          },
+          "neighborhood": {
+            "type": "string",
+            "description": "Bairro",
+            "example": "Centro"
+          },
+          "city": {
+            "type": "string",
+            "description": "Cidade",
+            "example": "São Paulo"
+          },
+          "state": {
+            "type": "string",
+            "description": "Estado (sigla)",
+            "example": "SP"
+          },
+          "zip_code": {
+            "type": "string",
+            "description": "CEP",
+            "example": "01234-567"
+          },
+          "coordinates": {
+            "description": "Coordenadas geográficas da localização",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CoordinatesDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "street",
+          "number",
+          "neighborhood",
+          "city",
+          "state",
+          "zip_code"
+        ]
+      },
+      "RecipientDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nome do destinatário",
+            "example": "João Silva"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Telefone do destinatário",
+            "example": "(11) 98765-4321"
+          },
+          "document": {
+            "type": "string",
+            "description": "Documento do destinatário (CPF/CNPJ)",
+            "example": "123.456.789-00"
+          },
+          "address": {
+            "description": "Endereço completo do destinatário",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AddressDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "phone",
+          "document",
+          "address"
+        ]
+      },
+      "DeliveryEventDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único do evento",
+            "example": "1"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status da entrega no momento do evento",
+            "enum": [
+              "PENDING",
+              "DISPATCHED",
+              "IN_ROUTE",
+              "DELIVERED",
+              "DELAYED",
+              "FAILED"
+            ],
+            "example": "IN_ROUTE"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Data e hora do evento no formato ISO 8601",
+            "example": "2024-01-15T10:30:00Z"
+          },
+          "actor": {
+            "type": "string",
+            "description": "Responsável pela ação/evento",
+            "example": "Sistema"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Observações adicionais sobre o evento",
+            "example": "Entrega em rota para destinatário"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "timestamp",
+          "actor"
+        ]
+      },
+      "DeliveryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único da entrega",
+            "example": "1"
+          },
+          "tracking_code": {
+            "type": "string",
+            "description": "Código de rastreamento da entrega",
+            "example": "BR123456789"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status atual da entrega",
+            "enum": [
+              "PENDING",
+              "DISPATCHED",
+              "IN_ROUTE",
+              "DELIVERED",
+              "DELAYED",
+              "FAILED"
+            ],
+            "example": "IN_ROUTE"
+          },
+          "priority": {
+            "type": "string",
+            "description": "Nível de prioridade da entrega",
+            "enum": [
+              "LOW",
+              "NORMAL",
+              "HIGH",
+              "URGENT"
+            ],
+            "example": "NORMAL"
+          },
+          "assigned_driver": {
+            "type": "string",
+            "description": "Nome do motorista atribuído à entrega",
+            "example": "Carlos Silva"
+          },
+          "recipient": {
+            "description": "Informações do destinatário",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RecipientDto"
+              }
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Data e hora de criação da entrega no formato ISO 8601",
+            "example": "2024-01-15T08:00:00Z"
+          },
+          "expected_delivery_at": {
+            "type": "string",
+            "description": "Data e hora prevista para entrega no formato ISO 8601",
+            "example": "2024-01-15T18:00:00Z"
+          },
+          "delivery_attempts": {
+            "type": "number",
+            "description": "Número de tentativas de entrega realizadas",
+            "example": 1
+          },
+          "timeline": {
+            "description": "Histórico de eventos da entrega",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeliveryEventDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "tracking_code",
+          "status",
+          "priority",
+          "recipient",
+          "created_at",
+          "expected_delivery_at",
+          "delivery_attempts",
+          "timeline"
+        ]
+      },
+      "PaginatedDeliveriesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Lista de entregas na página atual",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeliveryDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Número total de entregas que correspondem aos filtros",
+            "example": 50
+          },
+          "page": {
+            "type": "number",
+            "description": "Página atual",
+            "example": 1
+          },
+          "totalPages": {
+            "type": "number",
+            "description": "Total de páginas disponíveis",
+            "example": 5
+          }
+        },
+        "required": [
+          "data",
+          "total",
+          "page",
+          "totalPages"
+        ]
+      },
+      "DeliveryStatsDto": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number",
+            "description": "Total de entregas no sistema",
+            "example": 50
+          },
+          "inRoute": {
+            "type": "object",
+            "description": "Estatísticas de entregas em rota",
+            "example": {
+              "count": 15,
+              "percentage": "30.0"
+            }
+          },
+          "completed": {
+            "type": "object",
+            "description": "Estatísticas de entregas concluídas",
+            "example": {
+              "count": 20,
+              "percentage": "40.0"
+            }
+          },
+          "delayed": {
+            "type": "object",
+            "description": "Estatísticas de entregas atrasadas",
+            "example": {
+              "count": 3,
+              "percentage": "6.0"
+            }
+          },
+          "byStatus": {
+            "type": "object",
+            "description": "Contagem de entregas por status",
+            "example": {
+              "PENDING": 5,
+              "DISPATCHED": 7,
+              "IN_ROUTE": 15,
+              "DELIVERED": 20,
+              "DELAYED": 3,
+              "FAILED": 0
+            }
+          }
+        },
+        "required": [
+          "total",
+          "inRoute",
+          "completed",
+          "delayed",
+          "byStatus"
+        ]
+      },
+      "BulkRescheduleDto": {
+        "type": "object",
+        "properties": {
+          "deliveryIds": {
+            "description": "Lista de IDs das entregas a serem reagendadas",
+            "example": [
+              "1",
+              "2",
+              "3"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "newExpectedDate": {
+            "type": "string",
+            "description": "Nova data de previsão de entrega no formato ISO 8601 (YYYY-MM-DDTHH:mm:ssZ)",
+            "example": "2024-12-31T23:59:59Z"
+          }
+        },
+        "required": [
+          "deliveryIds",
+          "newExpectedDate"
+        ]
+      },
+      "BulkOperationResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indica se a operação em massa foi executada com sucesso",
+            "example": true
+          },
+          "updated": {
+            "type": "number",
+            "description": "Quantidade de entregas atualizadas com sucesso",
+            "example": 5
+          },
+          "notFound": {
+            "type": "number",
+            "description": "Quantidade de entregas não encontradas",
+            "example": 0
+          },
+          "notFoundIds": {
+            "description": "Lista de IDs das entregas que não foram encontradas",
+            "example": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "data": {
+            "description": "Dados das entregas atualizadas",
+            "example": [],
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "success",
+          "updated",
+          "notFound",
+          "notFoundIds",
+          "data"
+        ]
+      },
+      "BulkAssignDriverDto": {
+        "type": "object",
+        "properties": {
+          "deliveryIds": {
+            "description": "Lista de IDs das entregas para atribuir motorista",
+            "example": [
+              "1",
+              "2",
+              "3"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "driverId": {
+            "type": "string",
+            "description": "ID do motorista a ser atribuído às entregas",
+            "example": "1"
+          }
+        },
+        "required": [
+          "deliveryIds",
+          "driverId"
+        ]
+      },
+      "BulkUpdatePriorityDto": {
+        "type": "object",
+        "properties": {
+          "deliveryIds": {
+            "description": "Lista de IDs das entregas para atualizar prioridade",
+            "example": [
+              "1",
+              "2",
+              "3"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "priority": {
+            "type": "string",
+            "description": "Nível de prioridade a ser aplicado às entregas",
+            "enum": [
+              "LOW",
+              "NORMAL",
+              "HIGH",
+              "URGENT"
+            ],
+            "example": "HIGH"
+          }
+        },
+        "required": [
+          "deliveryIds",
+          "priority"
+        ]
+      },
+      "VehicleDto": {
+        "type": "object",
+        "properties": {
+          "plate": {
+            "type": "string",
+            "description": "Placa do veículo",
+            "example": "ABC-1234"
+          },
+          "model": {
+            "type": "string",
+            "description": "Modelo do veículo",
+            "example": "Honda CG 160"
+          },
+          "type": {
+            "type": "string",
+            "description": "Tipo do veículo",
+            "enum": [
+              "MOTORCYCLE",
+              "CAR",
+              "VAN",
+              "TRUCK"
+            ],
+            "example": "MOTORCYCLE"
+          }
+        },
+        "required": [
+          "plate",
+          "model",
+          "type"
+        ]
+      },
+      "DriverDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único do motorista",
+            "example": "1"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome completo do motorista",
+            "example": "Carlos Silva"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Telefone do motorista",
+            "example": "(11) 98765-4321"
+          },
+          "email": {
+            "type": "string",
+            "description": "E-mail do motorista",
+            "example": "carlos.silva@abbiamo.com"
+          },
+          "vehicle": {
+            "description": "Informações do veículo do motorista",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VehicleDto"
+              }
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "Status atual do motorista",
+            "enum": [
+              "AVAILABLE",
+              "BUSY",
+              "OFFLINE"
+            ],
+            "example": "AVAILABLE"
+          },
+          "current_deliveries": {
+            "type": "number",
+            "description": "Número de entregas atuais em andamento",
+            "example": 3
+          },
+          "total_deliveries": {
+            "type": "number",
+            "description": "Total de entregas realizadas",
+            "example": 150
+          },
+          "rating": {
+            "type": "number",
+            "description": "Avaliação média do motorista (0-5)",
+            "example": 4.7,
+            "minimum": 0,
+            "maximum": 5
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Data e hora de cadastro no formato ISO 8601",
+            "example": "2024-01-01T10:00:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "phone",
+          "email",
+          "vehicle",
+          "status",
+          "current_deliveries",
+          "total_deliveries",
+          "rating",
+          "created_at"
+        ]
+      },
+      "DriversListResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Lista de motoristas",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DriverDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total de motoristas",
+            "example": 10
+          }
+        },
+        "required": [
+          "data",
+          "total"
+        ]
+      }
+    }
+  }
+}

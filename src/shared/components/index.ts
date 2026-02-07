@@ -13,6 +13,8 @@ export type { CardProps } from './Card';
 export { Select } from './Select';
 export type { SelectProps } from './Select';
 
+export { Checkbox, type CheckboxState } from './Checkbox';
+
 export { Table, Thead, Tbody, Tr, Th, Td } from './Table';
 export type { TableProps, TrProps } from './Table';
 

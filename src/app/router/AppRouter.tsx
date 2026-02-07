@@ -3,6 +3,7 @@ import { RequireAuth } from './RequireAuth';
 import { LoginPage } from '@/features/auth/pages/LoginPage';
 import { AppShell } from '@/app/layouts/AppShell';
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import { DeliveriesListPage } from '@/features/deliveries/pages/DeliveriesListPage';
 
 function DashboardPage() {
   return (
@@ -57,7 +58,7 @@ export function AppRouter() {
       >
         <Route index element={<Navigate to='/dashboard' replace />} />
         <Route path='dashboard' element={<DashboardPage />} />
-        <Route path='deliveries' element={<DeliveriesPage />} />
+        <Route path='deliveries' element={<DeliveriesListPage />} />
         <Route path='deliveries/:id' element={<DeliveryDetailPage />} />
       </Route>
       <Route path='*' element={<CatchAllRoute />} />

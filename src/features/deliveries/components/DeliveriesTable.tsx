@@ -1,4 +1,4 @@
-import { Table, Badge, Card } from '@/shared/components';
+import { Table, Thead, Tbody, Tr, Th, Td, Badge, Card } from '@/shared/components';
 import type { DeliveryDto, DeliveryStatus } from '@/features/deliveries/types';
 import { formatIsoToLocale } from '@/shared/utils/date';
 
@@ -31,33 +31,33 @@ export function DeliveriesTable({ deliveries, onRowClick }: DeliveriesTableProps
   return (
     <Card className='overflow-hidden'>
       <Table>
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Destinatário</th>
-            <th>Status</th>
-            <th>Data</th>
-          </tr>
-        </thead>
-        <tbody>
-          {deliveries.map((delivery) => {
-            const status = statusConfig[delivery.status];
-            return (
-              <tr
-                key={delivery.id}
-                onClick={() => onRowClick?.(delivery)}
-                className={onRowClick ? 'cursor-pointer' : ''}
-              >
-                <td className='font-mono text-sm'>{delivery.tracking_code}</td>
-                <td>{delivery.recipient.name}</td>
-                <td>
-                  <Badge variant={status.variant}>{status.label}</Badge>
-                </td>
-                <td className='text-slate-400'>{formatIsoToLocale(delivery.created_at)}</td>
-              </tr>
-            );
-          })}
-        </tbody>
+        <Thead>
+            <Tr>
+              <Th>Código</Th>
+              <Th>Destinatário</Th>
+              <Th>Status</Th>
+              <Th>Data</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {deliveries.map((delivery) => {
+              const status = statusConfig[delivery.status];
+              return (
+                <Tr
+                  key={delivery.id}
+                  onClick={() => onRowClick?.(delivery)}
+                  className={onRowClick ? 'cursor-pointer' : ''}
+                >
+                  <Td className='font-mono text-sm'>{delivery.tracking_code}</Td>
+                  <Td>{delivery.recipient.name}</Td>
+                  <Td>
+                    <Badge variant={status.variant}>{status.label}</Badge>
+                  </Td>
+                  <Td className='text-slate-400'>{formatIsoToLocale(delivery.created_at)}</Td>
+                </Tr>
+              );
+            })}
+          </Tbody>
       </Table>
     </Card>
   );

@@ -11,15 +11,15 @@ export function AppShell() {
   };
 
   return (
-    <div className='min-h-screen bg-slate-950'>
-      <header className='bg-slate-900 border-b border-slate-700'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+    <div className='h-screen flex flex-col bg-slate-950 overflow-hidden'>
+      <header className='shrink-0 bg-slate-900 border-b border-slate-700'>
+        <div className='w-full mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='flex justify-between h-16'>
             <div className='flex'>
-              <div className='flex-shrink-0 flex items-center'>
+              <div className='shrink-0 flex items-center'>
                 <h1 className='text-xl font-bold text-indigo-500'>Delivery Monitor</h1>
               </div>
-              <nav className='ml-8 flex space-x-4'>
+              <nav className='ml-8 flex space-x-4 items-center'>
                 <Link
                   to='/dashboard'
                   className='px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-slate-100 hover:bg-slate-800'
@@ -48,8 +48,10 @@ export function AppShell() {
           </div>
         </div>
       </header>
-      <main className='max-w-7xl mx-auto py-6 sm:px-6 lg:px-8'>
-        <Outlet />
+      <main className='flex-1 min-h-0 overflow-hidden'>
+        <div className='h-full min-h-0 w-full px-4 py-6 sm:px-6 lg:px-8 flex flex-col'>
+          <Outlet />
+        </div>
       </main>
     </div>
   );

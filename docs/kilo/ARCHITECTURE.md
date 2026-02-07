@@ -1,3 +1,8 @@
+Este documento descreve a arquitetura oficial do projeto
+e deve ser seguido tanto por humanos quanto por agentes de IA.
+
+A estrutura aqui descrita NÃO é sugestão.
+
 # Arquitetura da Aplicação
 
 ## Princípios
@@ -36,6 +41,7 @@ Cada feature pode conter:
 - Feature pode depender de shared, nunca o inverso.
 - src/services/httpClient.ts é o client singleton do projeto e contém o token storage (auth.token).
 - Features não instanciam client e não guardam token.
+- Features apenas consomem `api.request(...)`
 
 ## Proibições
 

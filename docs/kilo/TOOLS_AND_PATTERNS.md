@@ -41,3 +41,13 @@
 - Hooks “faz tudo”.
 - Utils que conhecem domínio.
 - Wrapper genérico de fetch dentro de feature.
+
+## Proibições Explícitas
+
+É proibido ao agente:
+
+- Criar múltiplas instâncias de HTTP client
+- Criar validação por schema (Zod, Yup, etc.)
+- Criar abstrações genéricas não documentadas
+- Introduzir novas bibliotecas sem instrução explícita
+- Criar state management adicional

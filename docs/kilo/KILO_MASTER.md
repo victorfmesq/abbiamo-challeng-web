@@ -1,4 +1,40 @@
+⚠️ FONTE DE VERDADE DO PROJETO
+
+Este diretório (docs/kilo) define os padrões globais, decisões
+arquiteturais e restrições deste projeto.
+
+Este conteúdo existe PRIMARIAMENTE para orientar agentes de IA
+(stateless) utilizados no desenvolvimento.
+
+Nenhuma decisão arquitetural, estrutural ou de stack
+deve ser tomada fora do que está documentado aqui.
+
+## Como esta documentação deve ser usada por agentes de IA
+
+Antes de qualquer implementação, o agente DEVE:
+
+1. Ler este arquivo (KILO_MASTER.md)
+2. Identificar quais documentos adicionais são relevantes para a tarefa
+3. Consultar explicitamente esses documentos antes de escrever código
+
+Esta documentação deve ser tratada como um "filesystem mental"
+do projeto. Se algo não estiver aqui, o agente NÃO deve inventar.
+
 # KILO MASTER DIRECTIVE — Delivery Monitoring Dashboard
+
+## Modo Stateless e Limite de Tokens
+
+Os agentes utilizados neste projeto:
+
+- não mantêm memória entre sessões
+- possuem limite de tokens
+- não inferem contexto implícito
+
+Portanto:
+
+- A documentação NUNCA será reenviada inteira no prompt
+- O agente deve ser instruído a consultá-la via referência
+- Qualquer implementação deve assumir que esta é a única fonte de verdade
 
 ## Contexto do Projeto
 
@@ -36,6 +72,7 @@ Antes de implementar qualquer tarefa:
 
 ## Documentos de Referência (OBRIGATÓRIO)
 
+- Modo de Operação: `docs/kilo/AI_OPERATION_MODE.md`
 - Arquitetura: `docs/kilo/ARCHITECTURE.md`
 - Ferramentas e padrões: `docs/kilo/TOOLS_AND_PATTERNS.md`
 - UX/UI e Atomic Design: `docs/kilo/UX_UI_AND_ATOMIC.md`
@@ -51,3 +88,11 @@ Antes de implementar qualquer tarefa:
 - Qualquer função agnóstica deve ter teste unitário.
 - Reutilizar componentes do `shared` antes de criar novos.
 - Priorizar clareza e previsibilidade sobre “arquitetura perfeita”.
+
+## Ativação da Documentação (uso obrigatório em prompts)
+
+Todo novo chat com um agente de IA DEVE iniciar com um prompt
+que aponte explicitamente para este diretório (docs/kilo)
+e para este arquivo (KILO_MASTER.md).
+
+Sem isso, esta documentação não é considerada carregada.

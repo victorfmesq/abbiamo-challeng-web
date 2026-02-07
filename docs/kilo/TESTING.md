@@ -1,8 +1,16 @@
+Este documento define os critérios mínimos de qualidade
+esperados em qualquer implementação gerada por IA.
+
+Código sem testes quando exigidos deve ser considerado incompleto.
+
 # Testes e Qualidade
 
 ## Regra de Ouro
 
 Toda função agnóstica deve ter teste unitário.
+
+Funções puras, helpers de domínio e lógica de negócio
+DEVEM possuir testes unitários.
 
 ## Unit (Vitest)
 

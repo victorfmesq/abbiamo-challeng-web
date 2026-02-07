@@ -1,5 +1,7 @@
 # UX/UI e Atomic Design
 
+> 📘 **Verificar [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md.md)** para paleta de cores, tema dark mode e componentes compartilhados obrigatórios.
+
 ## Atomic Design
 
 - Atoms: Button, Input, Badge, Spinner

@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthProvider } from './features/auth/context/AuthContext';
-import App from './App';
+import { AuthProvider } from '@/features/auth/context/AuthContext';
+import App from '@/App';
 import * as httpClient from '@/services/httpClient';
 import * as session from '@/features/auth/services/session';
 

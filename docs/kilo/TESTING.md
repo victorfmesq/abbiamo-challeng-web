@@ -26,14 +26,12 @@ Os testes são organizados em `src/__tests__/` espelhando o path do código test
 ```
 src/
 ├── __tests__/
-│   ├── app/router/AppRouter.test.tsx      # teste de AppRouter
+│   ├── App.test.tsx                          # teste do componente App
+│   ├── app/router/AppRouter.test.tsx         # teste de AppRouter
 │   ├── features/deliveries/
 │   │   ├── components/DeliveriesTable.test.tsx    # teste do componente de tabela com seleção
 │   │   └── domain/deliveriesFilters.test.ts
-├── app/router/AppRouter.tsx
-└── features/deliveries/
-    ├── components/DeliveriesTable.tsx
-    └── domain/deliveriesFilters.ts
+│   └── shared/utils/pagination.test.ts
 ```
 
 **Regras:**
@@ -44,9 +42,9 @@ src/
 
 ### Arquivos de teste na mesma pasta (legado)
 
-Arquivos de teste existentes na mesma pasta do código (ex: `src/App.test.tsx`) são permitidos
-para testes simples de componentes ou arquivos já existentes, mas novos testes DEVEM seguir
-o padrão `src/__tests__/`.
+> ⚠️ **REGRA: Todos os testes DEVEM estar em `src/__tests__/`**
+
+Arquivos de teste existentes na mesma pasta do código são considerados **legado** e **devem ser migrados** para `src/__tests__/`.
 
 Este documento é NORMATIVO.
 

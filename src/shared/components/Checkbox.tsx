@@ -10,8 +10,8 @@ export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement
 }
 
 const baseStyles = `
-  h-5 w-5 rounded border cursor-pointer transition-all duration-200
-  flex items-center justify-center
+  h-5 w-5 rounded border-2 cursor-pointer transition-all duration-200
+  flex items-center justify-center flex-shrink-0
   focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-950
 `;
 
@@ -31,9 +31,9 @@ const stateStyles: Record<CheckboxState, string> = {
 };
 
 const iconStyles: Record<CheckboxState, string> = {
-  none: '',
-  partial: 'text-white',
-  full: 'text-white',
+  none: 'invisible',
+  partial: 'visible text-white',
+  full: 'visible text-white',
 };
 
 export function Checkbox({
@@ -52,34 +52,31 @@ export function Checkbox({
   }, [indeterminate]);
 
   const displayState = indeterminate ? 'partial' : state;
-  const isChecked = state === 'full';
 
   return (
     <label className={`inline-flex items-center gap-2 cursor-pointer ${className}`}>
       <div className={`relative ${baseStyles} ${stateStyles[displayState]}`}>
-        <input ref={inputRef} type='checkbox' checked={isChecked} className='sr-only' {...props} />
-        {displayState === 'full' && (
-          <svg
-            className={`h-3 w-3 ${iconStyles[displayState]}`}
-            fill='none'
-            viewBox='0 0 24 24'
-            stroke='currentColor'
-            strokeWidth={3}
-          >
+        <input
+          ref={inputRef}
+          type='checkbox'
+          checked={state === 'full'}
+          className='sr-only'
+          {...props}
+        />
+        <svg
+          className={`h-3 w-3 absolute inset-0 m-auto ${iconStyles[displayState]}`}
+          fill='none'
+          viewBox='0 0 24 24'
+          stroke='currentColor'
+          strokeWidth={3}
+        >
+          {displayState === 'full' && (
             <path strokeLinecap='round' strokeLinejoin='round' d='M5 13l4 4L19 7' />
-          </svg>
-        )}
-        {displayState === 'partial' && (
-          <svg
-            className={`h-3 w-3 ${iconStyles[displayState]}`}
-            fill='none'
-            viewBox='0 0 24 24'
-            stroke='currentColor'
-            strokeWidth={3}
-          >
+          )}
+          {displayState === 'partial' && (
             <path strokeLinecap='round' strokeLinejoin='round' d='M5 12h14' />
-          </svg>
-        )}
+          )}
+        </svg>
       </div>
       {label && <span className='text-sm text-slate-100'>{label}</span>}
     </label>

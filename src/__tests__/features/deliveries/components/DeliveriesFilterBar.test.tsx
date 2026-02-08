@@ -49,7 +49,7 @@ describe('DeliveriesFilterBar', () => {
   });
 
   describe('Date Selection via Select', () => {
-    it('updates filters when selecting "Hoje" from dropdown', () => {
+    it('updates filters with date range when selecting "Hoje" from dropdown', () => {
       render(
         <DeliveriesFilterBar filters={defaultFilters} onFiltersChange={onFiltersChangeMock} />
       );
@@ -57,16 +57,19 @@ describe('DeliveriesFilterBar', () => {
       const select = screen.getByRole('combobox', { name: 'Data' });
       fireEvent.change(select, { target: { value: 'today' } });
 
+      // Get today's date in YYYY-MM-DD format
+      const today = new Date().toISOString().split('T')[0];
+
       expect(onFiltersChangeMock).toHaveBeenCalledWith(
         expect.objectContaining({
-          dateFrom: undefined,
-          dateTo: undefined,
+          dateFrom: today,
+          dateTo: today,
           page: 1,
         })
       );
     });
 
-    it('updates filters when selecting "Amanhã" from dropdown', () => {
+    it('updates filters with date range when selecting "Amanhã" from dropdown', () => {
       render(
         <DeliveriesFilterBar filters={defaultFilters} onFiltersChange={onFiltersChangeMock} />
       );
@@ -74,16 +77,21 @@ describe('DeliveriesFilterBar', () => {
       const select = screen.getByRole('combobox', { name: 'Data' });
       fireEvent.change(select, { target: { value: 'tomorrow' } });
 
+      // Get tomorrow's date in YYYY-MM-DD format
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
       expect(onFiltersChangeMock).toHaveBeenCalledWith(
         expect.objectContaining({
-          dateFrom: undefined,
-          dateTo: undefined,
+          dateFrom: tomorrowStr,
+          dateTo: tomorrowStr,
           page: 1,
         })
       );
     });
 
-    it('updates filters when selecting "Esta semana" from dropdown', () => {
+    it('updates filters with date range when selecting "Esta semana" from dropdown', () => {
       render(
         <DeliveriesFilterBar filters={defaultFilters} onFiltersChange={onFiltersChangeMock} />
       );
@@ -91,10 +99,20 @@ describe('DeliveriesFilterBar', () => {
       const select = screen.getByRole('combobox', { name: 'Data' });
       fireEvent.change(select, { target: { value: 'thisWeek' } });
 
+      // Get this week's start (Monday) and end (Sunday) dates
+      const today = new Date();
+      const dayOfWeek = today.getDay();
+      const monday = new Date(today);
+      monday.setDate(today.getDate() - dayOfWeek);
+      const sunday = new Date(today);
+      sunday.setDate(today.getDate() + (6 - dayOfWeek));
+      const mondayStr = monday.toISOString().split('T')[0];
+      const sundayStr = sunday.toISOString().split('T')[0];
+
       expect(onFiltersChangeMock).toHaveBeenCalledWith(
         expect.objectContaining({
-          dateFrom: undefined,
-          dateTo: undefined,
+          dateFrom: mondayStr,
+          dateTo: sundayStr,
           page: 1,
         })
       );

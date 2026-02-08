@@ -21,6 +21,40 @@ const statusOptions: { value: DeliveryStatus | 'all'; label: string }[] = [
 
 const SEARCH_DEBOUNCE_MS = 1000;
 
+/**
+ * Convert quick filter to date range (YYYY-MM-DD format)
+ */
+function quickFilterToDateRange(
+  quickFilter: 'today' | 'tomorrow' | 'thisWeek' | null
+): { dateFrom: string; dateTo: string } | null {
+  if (!quickFilter) return null;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const thisWeekStart = new Date(today);
+  thisWeekStart.setDate(today.getDate() - today.getDay()); // Monday
+
+  const thisWeekEnd = new Date(today);
+  thisWeekEnd.setDate(today.getDate() + (6 - today.getDay())); // Sunday
+
+  const formatDate = (d: Date) => d.toISOString().split('T')[0];
+
+  switch (quickFilter) {
+    case 'today':
+      return { dateFrom: formatDate(today), dateTo: formatDate(today) };
+    case 'tomorrow':
+      return { dateFrom: formatDate(tomorrow), dateTo: formatDate(tomorrow) };
+    case 'thisWeek':
+      return { dateFrom: formatDate(thisWeekStart), dateTo: formatDate(thisWeekEnd) };
+    default:
+      return null;
+  }
+}
+
 export function DeliveriesFilterBar({ filters, onFiltersChange }: DeliveriesFilterBarProps) {
   const [search, setSearch] = useState(filters.search || '');
   const [status, setStatus] = useState<DeliveryStatus | 'all'>(filters.status || 'all');
@@ -65,10 +99,14 @@ export function DeliveriesFilterBar({ filters, onFiltersChange }: DeliveriesFilt
 
   const handleDateFilterChange = (value: DeliveryDateFilterValue) => {
     setDateFilter(value);
+
+    // Convert quick filter to date range
+    const dateRange = quickFilterToDateRange(value.quickFilter);
+
     onFiltersChange({
       ...filters,
-      dateFrom: value.dateFrom || undefined,
-      dateTo: value.dateTo || undefined,
+      dateFrom: dateRange?.dateFrom || value.dateFrom || undefined,
+      dateTo: dateRange?.dateTo || value.dateTo || undefined,
       page: 1,
     });
   };

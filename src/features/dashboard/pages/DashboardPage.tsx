@@ -69,9 +69,9 @@ export function DashboardPage() {
   }
 
   return (
-    <div className='flex overflow-y-auto flex-col min-h-0 flex-1 gap-6 p-6'>
+    <div className='flex overflow-y-auto flex-col min-h-0 flex-1 gap-6 px-6 pb-6'>
       {/* Period Filter */}
-      <div className='shrink-0'>
+      <div className='sticky top-0 z-30 -mx-6 px-6 py-4 bg-slate-950/95 backdrop-blur-sm border-b border-slate-800 shadow-sm -mt-6 mb-4'>
         <DashboardPeriodFilter value={period} onChange={setPeriod} />
       </div>
 

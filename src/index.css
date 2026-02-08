@@ -29,3 +29,82 @@
     --color-chart-delivered: #10b981;   /* emerald-500 */
   }
 }
+
+/* ========================================
+   Custom Scrollbar Styles for Dark Theme
+   ========================================
+   Adapted to match the slate-950 background
+   for a seamless dark theme experience.
+   ======================================== */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #334155 #0f172a;
+}
+
+/* Chrome, Safari, Opera, Edge */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #0f172a;
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background: #64748b;
+}
+
+/* Scrollbar for dropdowns and small containers */
+select::-webkit-scrollbar,
+.dropdown-content::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+select::-webkit-scrollbar-track,
+.dropdown-content::-webkit-scrollbar-track {
+  background: #1e293b;
+  border-radius: 3px;
+}
+
+select::-webkit-scrollbar-thumb,
+.dropdown-content::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 3px;
+}
+
+select::-webkit-scrollbar-thumb:hover,
+.dropdown-content::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Modal scrollbar */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}

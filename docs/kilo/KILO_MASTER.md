@@ -92,6 +92,7 @@ Antes de implementar qualquer tarefa:
 - Design System: `docs/kilo/DESIGN_SYSTEM.md`
 - Fluxos do Produto: `docs/kilo/FLOWS.md`
 - Testes e Qualidade: `docs/kilo/TESTING.md`
+- Dashboards: `docs/kilo/DASHBOARD.md`
 
 ## Regras Invioláveis
 

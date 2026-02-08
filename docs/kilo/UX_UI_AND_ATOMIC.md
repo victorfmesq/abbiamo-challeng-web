@@ -5,8 +5,8 @@
 ## Atomic Design
 
 - Atoms: Button, Input, Badge, Checkbox, Spinner
-- Molecules: Field, SearchInput, StatusBadge, DeliveryDateFilter
-- Organisms: FilterBar, Table, BulkActionsBar, DeliveriesFilterBar
+- Molecules: Field, SearchInput, StatusBadge, DeliveryDateFilter, MetricCard, DashboardPeriodFilter
+- Organisms: FilterBar, Table, BulkActionsBar, DeliveriesFilterBar, DashboardKpis, DashboardActionTables, DashboardTrends
 
 ## Heurísticas de Reuso
 
@@ -51,6 +51,14 @@ As seguintes regras são **OBRIGATÓRIAS** para todas as implementações de UI:
 - Header e filtros ficam no topo (fixos)
 - Footer de paginação fica na parte inferior do conteúdo da página
 - A área da tabela deve ter scroll interno vertical (`overflow-auto`)
+
+## Dashboard Components
+
+- MetricCard (molecule): card padrão para KPIs (label + value + hint)
+- DashboardPeriodFilter (molecule): dropdown de período global
+- DashboardKpis (organism): grid de KPIs principais
+- DashboardActionTables (organism): tabelas curtas de ação
+- DashboardTrends (organism): gráficos e distribuições
 
 **Exemplo de estrutura:**
 

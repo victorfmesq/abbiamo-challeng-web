@@ -84,3 +84,13 @@ GET /deliveries?dateFrom=YYYY-MM-DD&dateTo=YYYY-MM-DD
 - Consumir /deliveries/{id}
 - Timeline vertical
 - Dados completos do destinatário
+
+## Dashboard
+
+- Visão geral operacional das entregas
+- KPIs: total, em rota, concluídas, atrasadas
+- Tendências e distribuições
+- Ações prioritárias (tabelas curtas) com CTA abrindo DeliveryDetailsModal
+- Período global: Hoje / 7 / 14 / 30 dias
+
+**Fonte de verdade detalhada:** docs/kilo/DASHBOARD.md

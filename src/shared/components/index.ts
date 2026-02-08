@@ -18,5 +18,28 @@ export { Checkbox, type CheckboxState } from './Checkbox';
 export { Table, Thead, Tbody, Tr, Th, Td } from './Table';
 export type { TableProps, TrProps } from './Table';
 
+export { DataTable } from './DataTable';
+export type {
+  DataTableProps,
+  DataTableColumn,
+  DataTableActionsConfig,
+  DataTableAction,
+  StatusBadgeConfig,
+} from './DataTable';
+
+export {
+  DataTableWithLayout,
+  DataTableToolbar,
+  DataTableFooter,
+  DataTableLoading,
+  DataTableError,
+} from './DataTableWithLayout';
+export type {
+  DataTableWithLayoutProps,
+  PaginationMeta,
+  DataTableToolbarProps,
+  DataTablePaginationProps,
+} from './DataTableWithLayout';
+
 export { TablePagination, TableWithPagination } from './TablePagination';
 export type { TablePaginationProps, TableWithPaginationProps } from './TablePagination';

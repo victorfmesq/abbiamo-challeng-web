@@ -1,16 +1,53 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Button, TablePagination, Checkbox, Badge } from '@/shared/components';
+import {
+  Button,
+  Badge,
+  DataTableWithLayout,
+  type DataTableColumn,
+  type DataTableAction,
+} from '@/shared/components';
 import { DeliveriesFilterBar } from '../components/DeliveriesFilterBar';
-import { DeliveriesTable } from '../components/DeliveriesTable';
 import { useDeliveries } from '../hooks/useDeliveries';
 import type { DeliveriesFilters } from '../domain/deliveriesFilters';
-import type { DeliveryDto } from '@/features/deliveries/types';
+import type { DeliveryDto, DeliveryStatus } from '@/features/deliveries/types';
+import { formatIsoToLocale } from '@/shared/utils/date';
 
 const defaultFilters: DeliveriesFilters = {
   page: 1,
   limit: 10,
 };
+
+const statusConfig: Record<
+  DeliveryStatus,
+  { variant: 'success' | 'warning' | 'danger' | 'info'; label: string }
+> = {
+  PENDING: { variant: 'info', label: 'Pendente' },
+  DISPATCHED: { variant: 'info', label: 'Despachado' },
+  IN_ROUTE: { variant: 'info', label: 'Em rota' },
+  DELIVERED: { variant: 'success', label: 'Entregue' },
+  DELAYED: { variant: 'warning', label: 'Atrasado' },
+  FAILED: { variant: 'danger', label: 'Falhou' },
+};
+
+const columns: DataTableColumn<DeliveryDto>[] = [
+  { key: 'tracking_code', header: 'Código', cellClassName: 'font-mono text-sm' },
+  { key: 'recipient', header: 'Destinatário', render: (row) => row.recipient.name },
+  {
+    key: 'status',
+    header: 'Status',
+    render: (row) => {
+      const status = statusConfig[row.status];
+      return <Badge variant={status.variant}>{status.label}</Badge>;
+    },
+  },
+  {
+    key: 'date',
+    header: 'Data',
+    cellClassName: 'text-slate-400',
+    render: (row) => formatIsoToLocale(row.created_at),
+  },
+];
 
 export function DeliveriesListPage() {
   const navigate = useNavigate();
@@ -79,20 +116,6 @@ export function DeliveriesListPage() {
     return 'none' as const;
   }, [data?.data, selectedIds]);
 
-  if (isError) {
-    return (
-      <Card className='flex flex-col items-center justify-center gap-4 py-12'>
-        <p className='text-rose-400'>Erro ao carregar entregas</p>
-
-        <p className='text-slate-400 text-sm'>
-          {error instanceof Error ? error.message : 'Erro desconhecido'}
-        </p>
-
-        <Button onClick={() => refetch()}>Tentar novamente</Button>
-      </Card>
-    );
-  }
-
   return (
     <div className='flex flex-col flex-1 min-h-0 gap-6'>
       {/* Header */}
@@ -103,81 +126,37 @@ export function DeliveriesListPage() {
       </div>
 
       {/* Filters - Stack on mobile, inline on desktop */}
-      <Card className='p-4 shrink-0'>
+      <div className='p-4 shrink-0 bg-slate-900 rounded-xl border border-slate-700'>
         <DeliveriesFilterBar filters={filters} onFiltersChange={handleFiltersChange} />
-      </Card>
+      </div>
 
       {/* Table Container - Controlled height with flex layout */}
       <div className='flex flex-col flex-1 min-h-0'>
-        <Card className='flex flex-col min-h-0 overflow-hidden'>
-          {isLoading ? (
-            <div className='flex flex-1 items-center justify-center py-12'>
-              <div className='flex items-center gap-2 text-slate-400'>
-                <svg
-                  className='h-5 w-5 animate-spin'
-                  xmlns='http://www.w3.org/2000/svg'
-                  fill='none'
-                  viewBox='0 0 24 24'
-                >
-                  <circle
-                    className='opacity-25'
-                    cx='12'
-                    cy='12'
-                    r='10'
-                    stroke='currentColor'
-                    strokeWidth='4'
-                  />
-
-                  <path
-                    className='opacity-75'
-                    fill='currentColor'
-                    d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
-                  />
-                </svg>
-
-                <span>Carregando...</span>
-              </div>
-            </div>
-          ) : (
-            <div className='flex flex-col flex-1 min-h-0'>
-              {/* Toolbar with Select All and actions */}
-              <div className='flex items-center justify-between px-4 py-2 border-b border-slate-700 shrink-0 h-12'>
-                <div className='flex items-center gap-3 h-6'>
-                  <Checkbox
-                    state={selectAllState}
-                    onChange={handleToggleSelectAll}
-                    label='Selecionar tudo'
-                  />
-                  {selectedIds.size > 0 && <Badge variant='info'>{selectedIds.size}</Badge>}
-                </div>
-                {/* Future: Bulk actions would go here */}
-              </div>
-
-              {/* Table with internal scroll */}
-              <div className='overflow-auto min-h-0 flex-1'>
-                <DeliveriesTable
-                  deliveries={data?.data || []}
-                  selectedIds={selectedIds}
-                  onRowClick={handleRowClick}
-                  onToggleSelect={handleToggleSelect}
-                />
-              </div>
-
-              {/* Pagination Footer */}
-              {data && data.meta.total > 0 && (
-                <TablePagination
-                  page={data.meta.page}
-                  totalPages={data.meta.totalPages}
-                  total={data.meta.total}
-                  limit={data.meta.limit}
-                  onPageChange={handlePageChange}
-                  onLimitChange={handleLimitChange}
-                  isLoading={isLoading}
-                />
-              )}
-            </div>
-          )}
-        </Card>
+        <DataTableWithLayout
+          data={data?.data || []}
+          columns={columns}
+          selectedIds={selectedIds}
+          onRowClick={handleRowClick}
+          onToggleSelect={handleToggleSelect}
+          selectAllState={selectAllState}
+          onToggleSelectAll={handleToggleSelectAll}
+          selectedCount={selectedIds.size}
+          pagination={
+            data?.meta
+              ? {
+                  page: data.meta.page,
+                  limit: data.meta.limit,
+                  total: data.meta.total,
+                  totalPages: data.meta.totalPages,
+                }
+              : undefined
+          }
+          isLoading={isLoading}
+          error={isError ? (error instanceof Error ? error.message : 'Erro desconhecido') : null}
+          onRetry={() => refetch()}
+          onPageChange={handlePageChange}
+          onLimitChange={handleLimitChange}
+        />
       </div>
     </div>
   );

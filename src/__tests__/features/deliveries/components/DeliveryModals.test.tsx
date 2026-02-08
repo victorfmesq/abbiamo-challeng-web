@@ -445,7 +445,7 @@ describe('DeliveryDetailsModal', () => {
     it('displays timeline event actors', () => {
       render(<DeliveryDetailsModal {...defaultProps} />);
       // Each timeline event has the actor name
-      const actors = screen.getAllByText((content, element) => {
+      const actors = screen.getAllByText((content) => {
         return (
           content.includes('Sistema') ||
           content.includes('João Silva') ||
@@ -484,7 +484,7 @@ describe('DeliveryDetailsModal', () => {
 
       // When deliveryId is empty, the hook is called but with empty string
       // The component handles this by not displaying data
-      const { rerender } = render(<DeliveryDetailsModal {...defaultProps} deliveryId='' />);
+      render(<DeliveryDetailsModal {...defaultProps} deliveryId='' />);
 
       // The hook is called with empty string, but no data should be displayed
       expect(vi.mocked(useDelivery)).toHaveBeenCalledWith('');

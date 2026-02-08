@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getDashboardData } from '../services/dashboardService';
 import type { DashboardData, DashboardPeriod } from '../types';
 
@@ -53,8 +53,6 @@ export interface UseDashboardDataOptions {
 }
 
 export function useDashboardData({ period }: UseDashboardDataOptions) {
-  const queryClient = useQueryClient();
-
   const query = useQuery({
     queryKey: dashboardKeys().data(period),
     queryFn: () => getDashboardData(period),

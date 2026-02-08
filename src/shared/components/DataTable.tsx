@@ -244,7 +244,6 @@ export interface StatusBadgeConfig {
  * Helper function to create status badge configurations
  */
 export function createStatusBadgeConfig<T extends string>(
-  statusEnum: Record<string, T>,
   config: Record<T, { variant: BadgeVariant; label: string }>
 ): Record<T, StatusBadgeConfig> {
   return config as Record<T, StatusBadgeConfig>;

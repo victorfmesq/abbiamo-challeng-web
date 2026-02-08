@@ -10,6 +10,8 @@ if (import.meta.env.DEV && !import.meta.env.VITE_API_BASE_URL) {
 
 const TOKEN_KEY = 'auth.token';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000';
+
 export const authStorage = {
   getToken: () => storage.get(TOKEN_KEY),
   setToken: (token: string) => storage.set(TOKEN_KEY, token),
@@ -17,7 +19,7 @@ export const authStorage = {
 };
 
 const api = createHttpClient({
-  baseUrl: import.meta.env.VITE_API_BASE_URL,
+  baseUrl: API_BASE_URL,
   getToken: authStorage.getToken,
 });
 

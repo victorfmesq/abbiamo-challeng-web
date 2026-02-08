@@ -4,7 +4,6 @@ import { Input } from '@/shared/components/Input';
 import { useBulkAssignDriver } from '../hooks/useBulkAssignDriver';
 import { useDrivers } from '@/features/drivers/hooks/useDrivers';
 import type { DeliveryDto } from '../types';
-import type { DriverDto } from '@/features/drivers/types';
 
 interface AssignDriverModalProps {
   isOpen: boolean;

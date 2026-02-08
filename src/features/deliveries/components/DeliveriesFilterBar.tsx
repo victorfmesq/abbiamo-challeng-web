@@ -101,7 +101,7 @@ export function DeliveriesFilterBar({ filters, onFiltersChange }: DeliveriesFilt
     setDateFilter(value);
 
     // Convert quick filter to date range
-    const dateRange = quickFilterToDateRange(value.quickFilter);
+    const dateRange = value.quickFilter ? quickFilterToDateRange(value.quickFilter) : undefined;
 
     onFiltersChange({
       ...filters,

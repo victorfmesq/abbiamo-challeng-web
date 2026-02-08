@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Badge,
@@ -13,6 +12,7 @@ import {
   Td,
   Checkbox,
 } from '@/shared/components';
+import { DeliveryDetailsModal } from '../components/DeliveryDetailsModal';
 import { DeliveriesFilterBar } from '../components/DeliveriesFilterBar';
 import { BulkActionsDropdown } from '../components/BulkActionsDropdown';
 import { RescheduleDeliveriesModal } from '../components/RescheduleDeliveriesModal';
@@ -61,7 +61,6 @@ const columns: DataTableColumn<DeliveryDto>[] = [
 ];
 
 export function DeliveriesListPage() {
-  const navigate = useNavigate();
   const [filters, setFilters] = useState<DeliveriesFilters>(defaultFilters);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
@@ -69,7 +68,9 @@ export function DeliveriesListPage() {
   const [rescheduleModalOpen, setRescheduleModalOpen] = useState(false);
   const [assignDriverModalOpen, setAssignDriverModalOpen] = useState(false);
   const [priorityModalOpen, setPriorityModalOpen] = useState(false);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [actionDeliveryIds, setActionDeliveryIds] = useState<string[]>([]);
+  const [selectedDeliveryId, setSelectedDeliveryId] = useState<string | null>(null);
 
   const { data, isLoading, isError, error, refetch } = useDeliveries(filters);
 
@@ -78,7 +79,8 @@ export function DeliveriesListPage() {
   };
 
   const handleRowClick = (delivery: DeliveryDto) => {
-    navigate(`/deliveries/${delivery.id}`);
+    setSelectedDeliveryId(delivery.id);
+    setDetailsModalOpen(true);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -288,6 +290,17 @@ export function DeliveriesListPage() {
         deliveries={getDeliveriesForPreview(actionDeliveryIds)}
         onSuccess={() => setSelectedIds(new Set())}
       />
+
+      {selectedDeliveryId && (
+        <DeliveryDetailsModal
+          isOpen={detailsModalOpen}
+          onClose={() => {
+            setDetailsModalOpen(false);
+            setSelectedDeliveryId(null);
+          }}
+          deliveryId={selectedDeliveryId}
+        />
+      )}
     </div>
   );
 }

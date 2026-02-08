@@ -22,6 +22,7 @@ Antes de criar algo novo:
 - Empty state claro
 - Error state explícito
 - Ações em massa só aparecem quando há seleção
+- **Todos os elementos com `onClick` devem ter `hover:cursor-pointer`**
 
 ## Acessibilidade Básica
 

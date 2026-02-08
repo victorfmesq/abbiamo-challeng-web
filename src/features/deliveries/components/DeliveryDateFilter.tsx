@@ -151,7 +151,7 @@ export function DeliveryDateFilter({ value, onChange, className = '' }: Delivery
           <button
             type='button'
             onClick={handleClear}
-            className='flex size-full justify-center items-center text-sm text-slate-400 hover:text-slate-200 focus:outline-none rounded'
+            className='flex size-full justify-center items-center text-sm text-slate-400 hover:text-slate-200 hover:cursor-pointer focus:outline-none rounded'
           >
             X
           </button>

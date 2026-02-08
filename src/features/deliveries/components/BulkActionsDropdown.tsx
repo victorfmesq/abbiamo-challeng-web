@@ -129,7 +129,7 @@ export function BulkActionsDropdown({
       {/* Botão principal do bulk actions */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className='flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-lg transition-all duration-200'
+        className='flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 hover:cursor-pointer text-white rounded-lg shadow-lg transition-all duration-200'
         aria-label={`Abrir menu de ações para ${selectedIds.length} entregas selecionadas`}
         aria-expanded={isOpen}
         aria-haspopup='menu'
@@ -149,7 +149,7 @@ export function BulkActionsDropdown({
       {/* Botão de limpar seleção */}
       <button
         onClick={onClearSelection}
-        className='p-2 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded-lg transition-colors'
+        className='p-2 text-slate-400 hover:text-slate-100 hover:bg-slate-800 hover:cursor-pointer rounded-lg transition-colors'
         aria-label='Limpar seleção'
         title='Limpar seleção'
       >
@@ -174,7 +174,7 @@ export function BulkActionsDropdown({
           <div className='p-2'>
             <button
               onClick={() => handleAction('reschedule')}
-              className='w-full flex items-center gap-3 px-3 py-2.5 text-left text-slate-200 hover:bg-slate-800 rounded-lg transition-colors'
+              className='w-full flex items-center gap-3 px-3 py-2.5 text-left text-slate-200 hover:bg-slate-800 hover:cursor-pointer rounded-lg transition-colors'
               role='menuitem'
             >
               <RescheduleIcon />
@@ -185,7 +185,7 @@ export function BulkActionsDropdown({
             </button>
             <button
               onClick={() => handleAction('assign-driver')}
-              className='w-full flex items-center gap-3 px-3 py-2.5 text-left text-slate-200 hover:bg-slate-800 rounded-lg transition-colors'
+              className='w-full flex items-center gap-3 px-3 py-2.5 text-left text-slate-200 hover:bg-slate-800 hover:cursor-pointer rounded-lg transition-colors'
               role='menuitem'
             >
               <AssignDriverIcon />
@@ -198,7 +198,7 @@ export function BulkActionsDropdown({
             </button>
             <button
               onClick={() => handleAction('update-priority')}
-              className='w-full flex items-center gap-3 px-3 py-2.5 text-left text-slate-200 hover:bg-slate-800 rounded-lg transition-colors'
+              className='w-full flex items-center gap-3 px-3 py-2.5 text-left text-slate-200 hover:bg-slate-800 hover:cursor-pointer rounded-lg transition-colors'
               role='menuitem'
             >
               <UpdatePriorityIcon />

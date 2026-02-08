@@ -75,7 +75,6 @@ export function useDashboardData({ period }: UseDashboardDataOptions) {
   // ============================================================================
 
   const refetch = async () => {
-    await queryClient.invalidateQueries({ queryKey: dashboardKeys().all });
     return query.refetch();
   };
 

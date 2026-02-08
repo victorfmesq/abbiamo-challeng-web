@@ -115,7 +115,7 @@ export function RowActionsMenu({
       {/* Kebab button - visible only on hover */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`p-1.5 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 ${isOpen ? 'bg-slate-700 text-slate-100 opacity-100' : ''}`}
+        className={`p-1.5 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700 hover:cursor-pointer transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 ${isOpen ? 'bg-slate-700 text-slate-100 opacity-100' : ''}`}
         aria-label='Ações da entrega'
         aria-expanded={isOpen}
         aria-haspopup='menu'
@@ -136,7 +136,7 @@ export function RowActionsMenu({
           <div className='py-1'>
             <button
               onClick={() => handleAction('reschedule')}
-              className='w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 transition-colors'
+              className='w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 hover:cursor-pointer transition-colors'
               role='menuitem'
             >
               <RescheduleIcon />
@@ -144,7 +144,7 @@ export function RowActionsMenu({
             </button>
             <button
               onClick={() => handleAction('assign-driver')}
-              className='w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 transition-colors'
+              className='w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 hover:cursor-pointer transition-colors'
               role='menuitem'
             >
               <AssignDriverIcon />
@@ -152,7 +152,7 @@ export function RowActionsMenu({
             </button>
             <button
               onClick={() => handleAction('update-priority')}
-              className='w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 transition-colors'
+              className='w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 hover:cursor-pointer transition-colors'
               role='menuitem'
             >
               <UpdatePriorityIcon />

@@ -50,7 +50,7 @@ export function DeliveriesTable({
           <Th>Código</Th>
           <Th>Destinatário</Th>
           <Th>Status</Th>
-          <Th>Data</Th>
+          <Th>Previsão</Th>
           <Th className='w-12'></Th>
         </Tr>
       </Thead>
@@ -76,7 +76,7 @@ export function DeliveriesTable({
               <Td>
                 <Badge variant={status.variant}>{status.label}</Badge>
               </Td>
-              <Td className='text-slate-400'>{formatIsoToLocale(delivery.created_at)}</Td>
+              <Td className='text-slate-400'>{formatIsoToLocale(delivery.expected_delivery_at)}</Td>
               <Td onClick={(e) => e.stopPropagation()}>
                 <RowActionsMenu
                   deliveryId={delivery.id}

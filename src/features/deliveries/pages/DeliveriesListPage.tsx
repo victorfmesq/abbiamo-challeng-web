@@ -53,10 +53,10 @@ const columns: DataTableColumn<DeliveryDto>[] = [
     },
   },
   {
-    key: 'date',
-    header: 'Data',
+    key: 'expected_delivery_at',
+    header: 'Previsão',
     cellClassName: 'text-slate-400',
-    render: (row) => formatIsoToLocale(row.created_at),
+    render: (row) => formatIsoToLocale(row.expected_delivery_at),
   },
 ];
 
@@ -184,7 +184,7 @@ export function DeliveriesListPage() {
         <Td>
           <Badge variant={status.variant}>{status.label}</Badge>
         </Td>
-        <Td className='text-slate-400'>{formatIsoToLocale(delivery.created_at)}</Td>
+        <Td className='text-slate-400'>{formatIsoToLocale(delivery.expected_delivery_at)}</Td>
         <Td onClick={(e) => e.stopPropagation()}>
           <RowActionsMenu
             deliveryId={delivery.id}

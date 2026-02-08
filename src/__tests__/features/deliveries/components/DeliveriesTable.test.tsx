@@ -96,7 +96,7 @@ describe('DeliveriesTable', () => {
       expect(screen.getByText('Código')).toBeInTheDocument();
       expect(screen.getByText('Destinatário')).toBeInTheDocument();
       expect(screen.getByText('Status')).toBeInTheDocument();
-      expect(screen.getByText('Data')).toBeInTheDocument();
+      expect(screen.getByText('Previsão')).toBeInTheDocument();
     });
 
     it('renders all delivery rows', () => {

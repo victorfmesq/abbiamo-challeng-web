@@ -5,9 +5,20 @@ import {
   Badge,
   DataTableWithLayout,
   type DataTableColumn,
-  type DataTableAction,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Checkbox,
 } from '@/shared/components';
 import { DeliveriesFilterBar } from '../components/DeliveriesFilterBar';
+import { BulkActionsDropdown } from '../components/BulkActionsDropdown';
+import { RescheduleDeliveriesModal } from '../components/RescheduleDeliveriesModal';
+import { AssignDriverModal } from '../components/AssignDriverModal';
+import { UpdatePriorityModal } from '../components/UpdatePriorityModal';
+import { RowActionsMenu } from '../components/RowActionsMenu';
 import { useDeliveries } from '../hooks/useDeliveries';
 import type { DeliveriesFilters } from '../domain/deliveriesFilters';
 import type { DeliveryDto, DeliveryStatus } from '@/features/deliveries/types';
@@ -53,6 +64,13 @@ export function DeliveriesListPage() {
   const navigate = useNavigate();
   const [filters, setFilters] = useState<DeliveriesFilters>(defaultFilters);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  // Modal states
+  const [rescheduleModalOpen, setRescheduleModalOpen] = useState(false);
+  const [assignDriverModalOpen, setAssignDriverModalOpen] = useState(false);
+  const [priorityModalOpen, setPriorityModalOpen] = useState(false);
+  const [actionDeliveryIds, setActionDeliveryIds] = useState<string[]>([]);
+
   const { data, isLoading, isError, error, refetch } = useDeliveries(filters);
 
   const handleFiltersChange = (newFilters: DeliveriesFilters) => {
@@ -116,6 +134,67 @@ export function DeliveriesListPage() {
     return 'none' as const;
   }, [data?.data, selectedIds]);
 
+  // Bulk action handlers
+  const handleClearSelection = () => {
+    setSelectedIds(new Set());
+  };
+
+  const handleOpenReschedule = (ids: string[]) => {
+    setActionDeliveryIds(ids);
+    setRescheduleModalOpen(true);
+  };
+
+  const handleOpenAssignDriver = (ids: string[]) => {
+    setActionDeliveryIds(ids);
+    setAssignDriverModalOpen(true);
+  };
+
+  const handleOpenPriority = (ids: string[]) => {
+    setActionDeliveryIds(ids);
+    setPriorityModalOpen(true);
+  };
+
+  // Get deliveries for preview in modals
+  const getDeliveriesForPreview = (ids: string[]): DeliveryDto[] => {
+    return data?.data.filter((d) => ids.includes(d.id)) || [];
+  };
+
+  // Render table row
+  const renderRow = (delivery: DeliveryDto) => {
+    const status = statusConfig[delivery.status];
+    const isSelected = selectedIds.has(delivery.id);
+
+    return (
+      <Tr
+        key={delivery.id}
+        onClick={() => handleRowClick(delivery)}
+        className={'cursor-pointer group hover:bg-slate-800/50'}
+      >
+        <Td onClick={(e) => e.stopPropagation()}>
+          <Checkbox
+            state={isSelected ? 'full' : 'none'}
+            onChange={() => handleToggleSelect(delivery.id)}
+            aria-label={`Selecionar entrega ${delivery.tracking_code}`}
+          />
+        </Td>
+        <Td className='font-mono text-sm'>{delivery.tracking_code}</Td>
+        <Td>{delivery.recipient.name}</Td>
+        <Td>
+          <Badge variant={status.variant}>{status.label}</Badge>
+        </Td>
+        <Td className='text-slate-400'>{formatIsoToLocale(delivery.created_at)}</Td>
+        <Td onClick={(e) => e.stopPropagation()}>
+          <RowActionsMenu
+            deliveryId={delivery.id}
+            onOpenReschedule={handleOpenReschedule}
+            onOpenAssignDriver={handleOpenAssignDriver}
+            onOpenPriority={handleOpenPriority}
+          />
+        </Td>
+      </Tr>
+    );
+  };
+
   return (
     <div className='flex flex-col flex-1 min-h-0 gap-6'>
       {/* Header */}
@@ -156,8 +235,59 @@ export function DeliveriesListPage() {
           onRetry={() => refetch()}
           onPageChange={handlePageChange}
           onLimitChange={handleLimitChange}
-        />
+          bulkActions={
+            selectedIds.size > 0 && (
+              <BulkActionsDropdown
+                selectedIds={Array.from(selectedIds)}
+                onClearSelection={handleClearSelection}
+                onOpenReschedule={handleOpenReschedule}
+                onOpenAssignDriver={handleOpenAssignDriver}
+                onOpenPriority={handleOpenPriority}
+              />
+            )
+          }
+        >
+          {/* Custom table content with row actions column */}
+          <Table>
+            <Thead>
+              <Tr>
+                <Th className='w-12'></Th>
+                <Th>Código</Th>
+                <Th>Destinatário</Th>
+                <Th>Status</Th>
+                <Th>Data</Th>
+                <Th className='w-12'></Th>
+              </Tr>
+            </Thead>
+            <Tbody>{data?.data.map(renderRow)}</Tbody>
+          </Table>
+        </DataTableWithLayout>
       </div>
+
+      {/* Modals */}
+      <RescheduleDeliveriesModal
+        isOpen={rescheduleModalOpen}
+        onClose={() => setRescheduleModalOpen(false)}
+        deliveryIds={actionDeliveryIds}
+        deliveries={getDeliveriesForPreview(actionDeliveryIds)}
+        onSuccess={() => setSelectedIds(new Set())}
+      />
+
+      <AssignDriverModal
+        isOpen={assignDriverModalOpen}
+        onClose={() => setAssignDriverModalOpen(false)}
+        deliveryIds={actionDeliveryIds}
+        deliveries={getDeliveriesForPreview(actionDeliveryIds)}
+        onSuccess={() => setSelectedIds(new Set())}
+      />
+
+      <UpdatePriorityModal
+        isOpen={priorityModalOpen}
+        onClose={() => setPriorityModalOpen(false)}
+        deliveryIds={actionDeliveryIds}
+        deliveries={getDeliveriesForPreview(actionDeliveryIds)}
+        onSuccess={() => setSelectedIds(new Set())}
+      />
     </div>
   );
 }

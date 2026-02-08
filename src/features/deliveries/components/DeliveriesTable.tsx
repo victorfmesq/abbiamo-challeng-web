@@ -1,12 +1,16 @@
 import { Table, Thead, Tbody, Tr, Th, Td, Badge, Checkbox } from '@/shared/components';
 import type { DeliveryDto, DeliveryStatus } from '@/features/deliveries/types';
 import { formatIsoToLocale } from '@/shared/utils/date';
+import { RowActionsMenu } from './RowActionsMenu';
 
 interface DeliveriesTableProps {
   deliveries: DeliveryDto[];
   selectedIds: Set<string>;
   onRowClick?: (delivery: DeliveryDto) => void;
   onToggleSelect: (id: string) => void;
+  onOpenReschedule: (ids: string[]) => void;
+  onOpenAssignDriver: (ids: string[]) => void;
+  onOpenPriority: (ids: string[]) => void;
 }
 
 const statusConfig: Record<
@@ -26,6 +30,9 @@ export function DeliveriesTable({
   selectedIds,
   onRowClick,
   onToggleSelect,
+  onOpenReschedule,
+  onOpenAssignDriver,
+  onOpenPriority,
 }: DeliveriesTableProps) {
   if (deliveries.length === 0) {
     return (
@@ -44,6 +51,7 @@ export function DeliveriesTable({
           <Th>Destinatário</Th>
           <Th>Status</Th>
           <Th>Data</Th>
+          <Th className='w-12'></Th>
         </Tr>
       </Thead>
       <Tbody>
@@ -54,7 +62,7 @@ export function DeliveriesTable({
             <Tr
               key={delivery.id}
               onClick={() => onRowClick?.(delivery)}
-              className={onRowClick ? 'cursor-pointer' : ''}
+              className={onRowClick ? 'cursor-pointer group' : 'group'}
             >
               <Td onClick={(e) => e.stopPropagation()}>
                 <Checkbox
@@ -69,6 +77,14 @@ export function DeliveriesTable({
                 <Badge variant={status.variant}>{status.label}</Badge>
               </Td>
               <Td className='text-slate-400'>{formatIsoToLocale(delivery.created_at)}</Td>
+              <Td onClick={(e) => e.stopPropagation()}>
+                <RowActionsMenu
+                  deliveryId={delivery.id}
+                  onOpenReschedule={onOpenReschedule}
+                  onOpenAssignDriver={onOpenAssignDriver}
+                  onOpenPriority={onOpenPriority}
+                />
+              </Td>
             </Tr>
           );
         })}

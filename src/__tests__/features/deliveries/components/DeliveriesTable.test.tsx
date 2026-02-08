@@ -80,6 +80,9 @@ describe('DeliveriesTable', () => {
     deliveries: mockDeliveries,
     selectedIds: new Set<string>(),
     onToggleSelect: vi.fn(),
+    onOpenReschedule: vi.fn(),
+    onOpenAssignDriver: vi.fn(),
+    onOpenPriority: vi.fn(),
   };
 
   beforeEach(() => {

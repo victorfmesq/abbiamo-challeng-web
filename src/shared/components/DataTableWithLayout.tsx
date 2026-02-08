@@ -1,14 +1,9 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, type ReactElement } from 'react';
 import { Card } from './Card';
 import { Checkbox } from './Checkbox';
 import { Badge } from './Badge';
 import { TablePagination } from './TablePagination';
-import {
-  DataTable,
-  type DataTableColumn,
-  type DataTableAction,
-  type DataTableActionsConfig,
-} from './DataTable';
+import { DataTable, type DataTableColumn, type DataTableActionsConfig } from './DataTable';
 
 /**
  * Pagination metadata from API responses
@@ -83,7 +78,6 @@ export function DataTableFooter({
   isLoading = false,
   onPageChange,
   onLimitChange,
-  className = '',
 }: DataTablePaginationProps) {
   if (!pagination || pagination.total <= 0) {
     return null;
@@ -231,6 +225,8 @@ export interface DataTableWithLayoutProps<T> {
   loadingMessage?: string;
   /** Custom class name for the container */
   containerClassName?: string;
+  /** Custom table content (overrides default table rendering) */
+  children?: ReactElement;
 }
 
 export function DataTableWithLayout<T>({
@@ -258,6 +254,7 @@ export function DataTableWithLayout<T>({
 
   loadingMessage = 'Carregando...',
   containerClassName = '',
+  children,
 }: DataTableWithLayoutProps<T>) {
   const hasSelection = onToggleSelect !== undefined;
 
@@ -287,16 +284,20 @@ export function DataTableWithLayout<T>({
 
           {/* Table with internal scroll */}
           <div className='overflow-auto min-h-0 flex-1'>
-            <DataTable
-              data={data}
-              columns={columns}
-              actions={actions}
-              selectedIds={selectedIds}
-              onRowClick={onRowClick}
-              onToggleSelect={onToggleSelect}
-              idField={idField}
-              emptyMessage={emptyMessage}
-            />
+            {children ? (
+              children
+            ) : (
+              <DataTable
+                data={data}
+                columns={columns}
+                actions={actions}
+                selectedIds={selectedIds}
+                onRowClick={onRowClick}
+                onToggleSelect={onToggleSelect}
+                idField={idField}
+                emptyMessage={emptyMessage}
+              />
+            )}
           </div>
 
           {/* Pagination Footer */}

@@ -43,3 +43,6 @@ export type {
 
 export { TablePagination, TableWithPagination } from './TablePagination';
 export type { TablePaginationProps, TableWithPaginationProps } from './TablePagination';
+
+export { Modal, ModalFooter } from './Modal';
+export type { ModalProps, ModalFooterProps } from './Modal';

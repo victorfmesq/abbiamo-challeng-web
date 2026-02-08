@@ -148,6 +148,7 @@ export function RescheduleDeliveriesModal({
             error={!!errors.date}
             errorMessage={errors.date}
             placeholder='Selecione a nova data'
+            className='[&::-webkit-calendar-picker-indicator]:invert'
           />
         </div>
 

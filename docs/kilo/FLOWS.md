@@ -33,11 +33,44 @@ A decisão de redirecionamento considera:
 ## Listagem
 
 - Consumir /deliveries
-- Filtros por status, data e busca
+- **Filtros:**
+  - Status (dropdown)
+  - Busca por código de rastreio
+  - **Data/Período** (novo):
+    - Campo base: `expected_delivery_at`
+    - Quick filters: Hoje, Amanhã, Esta semana, Atrasadas
+    - Date range: De / Até
+    - Mudança de filtro reseta paginação para página 1
 - Paginação server-side
 - **Seleção múltipla:** Checkbox por linha + "Selecionar tudo" com estados full/partial/none
 - **Toolbar de seleção:** Badge com contador visível quando há itens selecionados
 - Seleção persiste entre páginas (mantida via Set<string>)
+
+## Filtro de Data/Período
+
+### Quick Filters
+
+| Opção       | Descrição                         | Condição                                          |
+| ----------- | --------------------------------- | ------------------------------------------------- |
+| Hoje        | Entregas com previsão para hoje   | expected_delivery_at = hoje                       |
+| Amanhã      | Entregas com previsão para amanhã | expected_delivery_at = amanhã                     |
+| Esta semana | Entregas desta semana             | expected_delivery_at entre segunda e domingo      |
+| Atrasadas   | Entregas atrasadas                | expected_delivery_at < now && status != DELIVERED |
+
+### Regras de Interação
+
+1. **Quick filter → Data manual:** Quick filter é limpo ao digitar data
+2. **Data manual → Quick filter:** Data é limpa ao selecionar quick filter
+3. **Limpar:** Reseta todo o filtro de data
+4. **Qualquer mudança:** Reseta paginação para página 1
+
+### Query Params da API
+
+```
+GET /deliveries?dateFrom=YYYY-MM-DD&dateTo=YYYY-MM-DD
+```
+
+- Quick filters são convertidos para dateFrom/dateTo no frontend antes da chamada
 
 ## Ações em Massa
 

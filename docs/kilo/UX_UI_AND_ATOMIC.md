@@ -5,8 +5,8 @@
 ## Atomic Design
 
 - Atoms: Button, Input, Badge, Checkbox, Spinner
-- Molecules: Field, SearchInput, StatusBadge
-- Organisms: FilterBar, Table, BulkActionsBar
+- Molecules: Field, SearchInput, StatusBadge, DeliveryDateFilter
+- Organisms: FilterBar, Table, BulkActionsBar, DeliveriesFilterBar
 
 ## Heurísticas de Reuso
 
@@ -303,7 +303,7 @@ interface TableProps {
 | --------- | ---------------- | ------------ | ----------------------------------------------- |
 | `none`    | ☑️ vazio         | `'none'`     | Nenhuma linha selecionada                       |
 | `partial` | ☐ com traço (-)  | `'partial'`  | Pelo menos uma linha selecionada, mas não todas |
-| `full`    | ☑️ com ✓ (check)  | `'full'`     | Todas as linhas da página atual selecionadas    |
+| `full`    | ☑️ com ✓ (check) | `'full'`     | Todas as linhas da página atual selecionadas    |
 
 **Interface do componente:**
 
@@ -410,3 +410,115 @@ const selectAllState = useMemo(() => {
 - [ ] Acessibilidade (aria-label) presente
 - [ ] Paginação: seleção persiste entre páginas?
 - [ ] Filtros: seleção é mantida ou limpada?
+
+---
+
+## DeliveryDateFilter (Filtro de Data/Período)
+
+**Arquivo:** [`src/features/deliveries/components/DeliveryDateFilter.tsx`](src/features/deliveries/components/DeliveryDateFilter.tsx)
+
+### Visão Geral
+
+Componente Molecule para filtragem de entregas por data de previsão de entrega (`expected_delivery_at`).
+
+### Interface
+
+```tsx
+export interface DeliveryDateFilterValue {
+  dateFrom?: string;
+  dateTo?: string;
+  quickFilter?: 'today' | 'tomorrow' | 'thisWeek' | 'overdue' | null;
+}
+
+export interface DeliveryDateFilterProps {
+  value: DeliveryDateFilterValue;
+  onChange: (value: DeliveryDateFilterValue) => void;
+  className?: string;
+}
+```
+
+### Funcionalidades
+
+| Funcionalidade         | Descrição                                     |
+| ---------------------- | --------------------------------------------- |
+| **Data única**         | Filtra por dia específico (dateFrom = dateTo) |
+| **Intervalo de datas** | dateFrom e dateTo para range                  |
+| **Quick Filters**      | Chips para seleção rápida                     |
+
+### Quick Filters (Chips)
+
+| Label       | Valor      | Descrição                                         |
+| ----------- | ---------- | ------------------------------------------------- |
+| Hoje        | `today`    | expected_delivery_at = hoje                       |
+| Amanhã      | `tomorrow` | expected_delivery_at = amanhã                     |
+| Esta semana | `thisWeek` | expected_delivery_at nesta semana                 |
+| Atrasadas   | `overdue`  | expected_delivery_at < now && status != DELIVERED |
+
+### Regras de Negócio
+
+| Regra                | Comportamento                                             |
+| -------------------- | --------------------------------------------------------- |
+| Chip selecionado     | Limpa inputs de data manual                               |
+| Data manual digitada | Limpa seleção de chip rápido                              |
+| Limpar filtro        | Reseta dateFrom, dateTo e quickFilter para undefined/null |
+| Mudança de filtro    | Reseta paginação para página 1 (implementado na page)     |
+
+### UI/UX
+
+```tsx
+// Estrutura visual
+<div className='flex flex-col gap-4'>
+  {/* Quick Filter Chips */}
+  <div className='flex flex-wrap gap-2'>
+    {QUICK_FILTERS.map(...)}
+  </div>
+
+  {/* Date Range Inputs */}
+  <div className='flex flex-col sm:flex-row gap-3 sm:items-end'>
+    <Input id='dateFrom' type='date' />
+    <Input id='dateTo' type='date' />
+    {hasFilters && <Button variant='ghost' size='sm'>Limpar</Button>}
+  </div>
+</div>
+```
+
+### Responsividade
+
+| Breakpoint       | Layout Chips      | Layout Inputs             |
+| ---------------- | ----------------- | ------------------------- |
+| Mobile (<640px)  | `flex-wrap gap-2` | `flex-col` empilhados     |
+| Desktop (≥640px) | Em linha          | `sm:flex-row` lado a lado |
+
+### Estados Visuais dos Chips
+
+| Estado      | Classes                                                                  |
+| ----------- | ------------------------------------------------------------------------ |
+| **Ativo**   | `bg-indigo-600 text-white`                                               |
+| **Inativo** | `bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700` |
+
+### Acessibilidade
+
+- `aria-pressed` nos chips para indicar estado ativo
+- `htmlFor` e `id` nos labels dos inputs
+- `type='button'` nos chips para evitar submit de form
+
+### Integração com API
+
+```tsx
+// Params enviados para API
+{
+  dateFrom?: string;  // ISO date (YYYY-MM-DD)
+  dateTo?: string;    // ISO date (YYYY-MM-DD)
+}
+
+// Quick filters são calculados no backend
+// ou convertidos para dateFrom/dateTo no hook
+```
+
+### Arquivos Relacionados
+
+| Arquivo                                                                                                                                                  | Propósito                       |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| [`src/features/deliveries/domain/deliveriesFilters.ts`](src/features/deliveries/domain/deliveriesFilters.ts)                                             | Tipos e normalização de filtros |
+| [`src/__tests__/features/deliveries/components/DeliveriesFilterBar.test.tsx`](src/__tests__/features/deliveries/components/DeliveriesFilterBar.test.tsx) | Testes do componente            |
+| [`src/features/deliveries/pages/DeliveriesListPage.tsx`](src/features/deliveries/pages/DeliveriesListPage.tsx)                                           | Página que integra o filtro     |

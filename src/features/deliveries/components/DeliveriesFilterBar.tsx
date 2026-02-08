@@ -2,6 +2,7 @@ import { useState, useEffect, type ChangeEvent } from 'react';
 import { Input, Button, Select } from '@/shared/components';
 import type { DeliveryStatus } from '@/features/deliveries/types';
 import type { DeliveriesFilters } from '../domain/deliveriesFilters';
+import { DeliveryDateFilter, type DeliveryDateFilterValue } from './DeliveryDateFilter';
 
 interface DeliveriesFilterBarProps {
   filters: DeliveriesFilters;
@@ -24,6 +25,11 @@ export function DeliveriesFilterBar({ filters, onFiltersChange }: DeliveriesFilt
   const [search, setSearch] = useState(filters.search || '');
   const [status, setStatus] = useState<DeliveryStatus | 'all'>(filters.status || 'all');
   const [searchTimeout, setSearchTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
+  const [dateFilter, setDateFilter] = useState<DeliveryDateFilterValue>({
+    dateFrom: filters.dateFrom || '',
+    dateTo: filters.dateTo || '',
+    quickFilter: undefined,
+  });
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -57,9 +63,20 @@ export function DeliveriesFilterBar({ filters, onFiltersChange }: DeliveriesFilt
     onFiltersChange({ ...filters, status: value === 'all' ? undefined : value, page: 1 });
   };
 
+  const handleDateFilterChange = (value: DeliveryDateFilterValue) => {
+    setDateFilter(value);
+    onFiltersChange({
+      ...filters,
+      dateFrom: value.dateFrom || undefined,
+      dateTo: value.dateTo || undefined,
+      page: 1,
+    });
+  };
+
   const handleClearFilters = () => {
     setSearch('');
     setStatus('all');
+    setDateFilter({ dateFrom: '', dateTo: '', quickFilter: undefined });
     // Clear any pending search timeout
     if (searchTimeout) {
       clearTimeout(searchTimeout);
@@ -68,7 +85,12 @@ export function DeliveriesFilterBar({ filters, onFiltersChange }: DeliveriesFilt
     onFiltersChange({ page: 1, limit: filters.limit });
   };
 
-  const hasActiveFilters = search || status !== 'all';
+  const hasActiveFilters =
+    search ||
+    status !== 'all' ||
+    dateFilter.dateFrom ||
+    dateFilter.dateTo ||
+    dateFilter.quickFilter;
 
   return (
     <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
@@ -88,6 +110,9 @@ export function DeliveriesFilterBar({ filters, onFiltersChange }: DeliveriesFilt
               </option>
             ))}
           </Select>
+        </div>
+        <div className='w-full sm:w-56'>
+          <DeliveryDateFilter value={dateFilter} onChange={handleDateFilterChange} />
         </div>
       </div>
       {hasActiveFilters && (

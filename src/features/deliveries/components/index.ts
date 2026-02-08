@@ -1,6 +1,7 @@
 export { DeliveryDetailsModal } from './DeliveryDetailsModal';
 export { DeliveriesTable } from './DeliveriesTable';
 export { DeliveriesFilterBar } from './DeliveriesFilterBar';
+export { DeliveryDateFilter } from './DeliveryDateFilter';
 export { RowActionsMenu } from './RowActionsMenu';
 export { AssignDriverModal } from './AssignDriverModal';
 export { RescheduleDeliveriesModal } from './RescheduleDeliveriesModal';

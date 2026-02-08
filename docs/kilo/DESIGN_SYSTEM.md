@@ -69,10 +69,81 @@
 
 ### Organisms
 
-- [`Table`](src/shared/components/Table.tsx)
+- [`DataTableWithLayout`](src/shared/components/DataTableWithLayout.tsx) — Tabela completa com toolbar, paginação e estados (padrão do sistema)
+- [`DataTable`](src/shared/components/DataTable.tsx) — Componente base da tabela (uso interno)
+- [`Table`](src/shared/components/Table.tsx) — Componentes low-level da tabela (Thead, Tbody, Tr, Th, Td)
 - [`FilterBar`](src/shared/components/FilterBar.tsx)
 - [`BulkActionsBar`](src/shared/components/BulkActionsBar.tsx)
 - [`PageHeader`](src/shared/components/PageHeader.tsx)
+
+## Tabela Padrão do Sistema
+
+Para todas as tabelas do sistema, utilize **obrigatoriamente** o componente `DataTableWithLayout`. Ele já inclui:
+
+- Toolbar com checkbox de "selecionar tudo" e contagem de itens selecionados
+- Tabela com scroll interno
+- Footer com paginação
+- Estados de loading e erro
+
+### Exemplo de Uso
+
+```tsx
+const columns: DataTableColumn<MyData>[] = [
+  { key: 'id', header: 'ID', width: '80px' },
+  { key: 'name', header: 'Nome' },
+  {
+    key: 'status',
+    header: 'Status',
+    render: (row) => <Badge variant={row.status}>{row.status}</Badge>,
+  },
+];
+
+<DataTableWithLayout
+  data={data}
+  columns={columns}
+  selectedIds={selectedIds}
+  onToggleSelect={handleSelect}
+  selectAllState={selectAllState}
+  onToggleSelectAll={handleSelectAll}
+  selectedCount={selectedIds.size}
+  pagination={meta}
+  isLoading={isLoading}
+  onPageChange={handlePageChange}
+  onLimitChange={handleLimitChange}
+/>;
+```
+
+### Actions Column
+
+Para adicionar coluna de ações:
+
+```tsx
+const actions: DataTableAction<MyData>[] = [
+  {
+    key: 'view',
+    variant: 'ghost',
+    label: 'Ver',
+    icon: <EyeIcon />,
+    onClick: (row) => navigate(`/details/${row.id}`),
+    ariaLabel: 'Ver detalhes',
+  },
+  {
+    key: 'edit',
+    variant: 'ghost',
+    label: 'Editar',
+    icon: <PencilIcon />,
+    onClick: (row) => openEdit(row),
+    ariaLabel: 'Editar',
+  },
+];
+
+<DataTableWithLayout
+  data={data}
+  columns={columns}
+  actions={{ header: 'Ações', actions }}
+  // ...outros props
+/>;
+```
 
 ## Card Padrão
 

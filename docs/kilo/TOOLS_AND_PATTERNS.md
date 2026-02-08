@@ -51,3 +51,28 @@
 - Criar abstrações genéricas não documentadas
 - Introduzir novas bibliotecas sem instrução explícita
 - Criar state management adicional
+- Criar tabelas personalizadas (sempre usar DataTableWithLayout)
+
+## Padrão de Tabela
+
+Todas as tabelas do sistema DEVEM usar o componente `DataTableWithLayout`. Este componente já inclui:
+
+- Toolbar com seleção múltipla
+- Tabela com scroll
+- Paginação
+- Estados de loading e erro
+
+Nunca crie componentes de tabela específicos para cada feature. Defina colunas e ações como configuração e passe para `DataTableWithLayout`.
+
+```tsx
+// ✅ CORRETO - Usa DataTableWithLayout
+const columns: DataTableColumn<DeliveryDto>[] = [
+  { key: 'tracking_code', header: 'Código' },
+  { key: 'status', header: 'Status', render: (row) => <Badge>{row.status}</Badge> },
+];
+
+<DataTableWithLayout data={data} columns={columns} />
+
+// ❌ ERRADO - Criar componente de tabela específico
+function DeliveriesTable() { ... }
+```

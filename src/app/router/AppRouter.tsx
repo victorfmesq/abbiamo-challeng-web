@@ -39,6 +39,7 @@ export function AppRouter() {
   return (
     <Routes>
       <Route path='/login' element={<LoginPage />} />
+
       <Route
         path='/'
         element={
@@ -52,6 +53,7 @@ export function AppRouter() {
         <Route path='deliveries' element={<DeliveriesListPage />} />
         <Route path='deliveries/:id' element={<DeliveryDetailPage />} />
       </Route>
+
       <Route path='*' element={<CatchAllRoute />} />
     </Routes>
   );

@@ -4,15 +4,7 @@ import { LoginPage } from '@/features/auth/pages/LoginPage';
 import { AppShell } from '@/app/layouts/AppShell';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { DeliveriesListPage } from '@/features/deliveries/pages/DeliveriesListPage';
-
-function DashboardPage() {
-  return (
-    <div className='p-8'>
-      <h1 className='text-2xl font-bold text-gray-900'>Dashboard</h1>
-      <p className='text-gray-600 mt-2'>Bem-vindo ao painel de monitoramento de entregas!</p>
-    </div>
-  );
-}
+import { DashboardPage } from '@/features/dashboard/pages';
 
 function DeliveryDetailPage() {
   return (

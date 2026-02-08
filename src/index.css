@@ -1,1 +1,31 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    /* ========================================
+       Semantic Color Labels for Dashboard
+       ========================================
+       These labels map to existing Tailwind colors
+       (see docs/kilo/DESIGN_SYSTEM.md)
+       
+       Change values here to update colors across
+       the entire dashboard application.
+       ======================================== */
+
+    /* Status Colors */
+    --color-info: #3b82f6;      /* blue-500 - PENDING, IN_ROUTE */
+    --color-success: #10b981;    /* emerald-500 - DELIVERED */
+    --color-warning: #f59e0b;    /* amber-500 - DELAYED */
+    --color-danger: #f43f5e;     /* rose-500 - FAILED */
+
+    /* Priority Colors */
+    --color-priority-urgent: #f43f5e;   /* rose-500 */
+    --color-priority-high: #f59e0b;     /* amber-500 */
+    --color-priority-normal: #3b82f6;   /* blue-500 */
+    --color-priority-low: #64748b;      /* slate-500 */
+
+    /* Chart Colors */
+    --color-chart-predicted: #64748b;   /* slate-500 */
+    --color-chart-delivered: #10b981;   /* emerald-500 */
+  }
+}

@@ -198,7 +198,7 @@ export function DeliveriesListPage() {
   };
 
   return (
-    <div className='flex flex-col flex-1 min-h-0 gap-6'>
+    <div className='flex flex-col px-4 py-6 flex-1 min-h-0 gap-6'>
       {/* Header */}
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
         <h1 className='text-2xl font-bold text-slate-100'>Entregas</h1>

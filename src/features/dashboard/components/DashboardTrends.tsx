@@ -16,29 +16,25 @@ import {
 } from 'recharts';
 import { Card, CardContent } from '@/shared/components/Card';
 
-// ========================================
-// Color Palette
-// Uses Tailwind color values aligned with DESIGN_SYSTEM.md
-// ========================================
-
 const STATUS_COLORS: Record<string, string> = {
-  PENDING: '#3b82f6', // blue-500 / info
-  IN_ROUTE: '#3b82f6', // blue-500 / info
-  DELIVERED: '#10b981', // emerald-500 / success
-  DELAYED: '#f59e0b', // amber-500 / warning
-  FAILED: '#f43f5e', // rose-500 / danger
+  PENDING: '#3f4247',
+  IN_ROUTE: '#3b82f6',
+  DISPATCHED: '#86aef0',
+  DELIVERED: '#10b981',
+  DELAYED: '#f59e0b',
+  FAILED: '#f43f5e',
 };
 
 const PRIORITY_COLORS: Record<string, string> = {
-  URGENT: '#f43f5e', // rose-500
-  HIGH: '#f59e0b', // amber-500
-  NORMAL: '#3b82f6', // blue-500
-  LOW: '#64748b', // slate-500
+  URGENT: '#f43f5e',
+  HIGH: '#f59e0b',
+  NORMAL: '#3b82f6',
+  LOW: '#64748b',
 };
 
 const CHART_COLORS = {
-  predicted: '#64748b', // slate-400
-  delivered: '#10b981', // emerald-500
+  predicted: '#64748b',
+  delivered: '#10b981',
 };
 
 export interface TrendDataPoint {
@@ -112,6 +108,7 @@ function getStatusLabel(status: string): string {
     DELIVERED: 'Entregue',
     DELAYED: 'Atrasada',
     FAILED: 'Falhou',
+    DISPATCHED: 'Despachada',
   };
   return labels[status] || status;
 }

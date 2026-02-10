@@ -2,9 +2,7 @@ import { Select } from '@/shared/components';
 import type { DashboardPeriod } from '../types';
 
 export interface DashboardPeriodFilterProps {
-  /** Currently selected period */
   value: DashboardPeriod;
-  /** Callback when period changes */
   onChange: (period: DashboardPeriod) => void;
 }
 
@@ -30,7 +28,8 @@ export function DashboardPeriodFilter({ value, onChange }: DashboardPeriodFilter
             onChange(newValue);
           }
         }}
-        aria-label='Select dashboard period'
+        aria-label='Período do dashboard'
+        data-testid='dashboard-period'
         className='w-full min-w-[140px] sm:w-auto'
       >
         {(['today', '7d', '14d', '30d'] as DashboardPeriod[]).map((period) => (

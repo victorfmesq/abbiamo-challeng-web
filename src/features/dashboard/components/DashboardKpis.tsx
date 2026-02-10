@@ -1,5 +1,6 @@
 import { Package, Truck, CircleCheck, AlertTriangle } from 'lucide-react';
 import { MetricCard } from './MetricCard';
+import { DashboardKpisSkeleton } from '@/shared/components/DashboardSkeletons';
 
 export interface DashboardKpisProps {
   kpis: {
@@ -11,25 +12,13 @@ export interface DashboardKpisProps {
   isLoading?: boolean;
 }
 
-function SkeletonCard() {
-  return <div className='animate-pulse bg-slate-800 h-28 rounded-lg' />;
-}
-
 export function DashboardKpis({ kpis, isLoading }: DashboardKpisProps) {
   if (isLoading) {
-    return (
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-        <SkeletonCard />
-        <SkeletonCard />
-        <SkeletonCard />
-        <SkeletonCard />
-      </div>
-    );
+    return <DashboardKpisSkeleton />;
   }
 
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-      {/* Total - default variant */}
       <MetricCard
         title='Total'
         value={kpis.total}
@@ -37,7 +26,6 @@ export function DashboardKpis({ kpis, isLoading }: DashboardKpisProps) {
         variant='default'
       />
 
-      {/* Em rota - default variant */}
       <MetricCard
         title='Em rota'
         value={kpis.inRoute}
@@ -45,7 +33,6 @@ export function DashboardKpis({ kpis, isLoading }: DashboardKpisProps) {
         variant='default'
       />
 
-      {/* Concluídas - success variant */}
       <MetricCard
         title='Concluídas'
         value={kpis.delivered}
@@ -53,7 +40,6 @@ export function DashboardKpis({ kpis, isLoading }: DashboardKpisProps) {
         variant='success'
       />
 
-      {/* Atrasadas - danger variant, PRIMARY (most prominent) */}
       <MetricCard
         title='Atrasadas'
         value={kpis.overdue}

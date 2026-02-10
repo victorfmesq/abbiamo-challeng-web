@@ -4,11 +4,8 @@ import { Table, Thead, Tbody, Tr, Th, Td } from '@/shared/components/Table';
 import { Badge } from '@/shared/components/Badge';
 import { Button } from '@/shared/components/Button';
 import { Card, CardHeader, CardContent } from '@/shared/components/Card';
+import { DashboardActionTableSkeletonRows } from '@/shared/components/DashboardSkeletons';
 import { formatIsoToLocale } from '@/shared/utils/date';
-
-// ============================================================================
-// Types
-// ============================================================================
 
 export interface DashboardActionTablesProps {
   overdueDeliveries: OverdueDelivery[];
@@ -17,10 +14,6 @@ export interface DashboardActionTablesProps {
   isLoading?: boolean;
   onViewDetails: (id: string) => void;
 }
-
-// ============================================================================
-// Constants & Utilities
-// ============================================================================
 
 const MAX_ROWS = 8;
 
@@ -75,38 +68,13 @@ function formatDelay(hours: number): string {
   return `${days}d ${remainingHours}h`;
 }
 
-// ============================================================================
-// Skeleton Component
-// ============================================================================
-
-function SkeletonRow() {
-  return (
-    <Tr>
-      <Td>
-        <div className='h-4 w-24 animate-pulse rounded bg-slate-700' />
-      </Td>
-      <Td>
-        <div className='h-4 w-32 animate-pulse rounded bg-slate-700' />
-      </Td>
-      <Td>
-        <div className='h-4 w-16 animate-pulse rounded bg-slate-700' />
-      </Td>
-      <Td>
-        <div className='h-4 w-20 animate-pulse rounded bg-slate-700' />
-      </Td>
-      <Td>
-        <div className='h-4 w-16 animate-pulse rounded bg-slate-700' />
-      </Td>
-      <Td className='w-20'>
-        <div className='h-8 w-20 animate-pulse rounded bg-slate-700' />
-      </Td>
-    </Tr>
-  );
-}
-
-// ============================================================================
-// Empty State Component
-// ============================================================================
+const SKELETON_COLUMNS = [
+  { widthClassName: 'w-24' },
+  { widthClassName: 'w-32' },
+  { widthClassName: 'w-16' },
+  { widthClassName: 'w-20' },
+  { widthClassName: 'w-16' },
+];
 
 function EmptyState({ message }: { message: string }) {
   return (
@@ -128,10 +96,6 @@ function EmptyState({ message }: { message: string }) {
     </div>
   );
 }
-
-// ============================================================================
-// Micro-Table Components
-// ============================================================================
 
 /**
  * Table 1: Overdue Deliveries (Most Critical)
@@ -171,9 +135,11 @@ function OverdueDeliveriesTable({
                 </Tr>
               </Thead>
               <Tbody>
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <SkeletonRow key={i} />
-                ))}
+                <DashboardActionTableSkeletonRows
+                  rows={4}
+                  columns={SKELETON_COLUMNS}
+                  actionColumnClassName='w-20'
+                />
               </Tbody>
             </Table>
           </div>
@@ -269,9 +235,11 @@ function UrgentInRouteTable({
                 </Tr>
               </Thead>
               <Tbody>
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <SkeletonRow key={i} />
-                ))}
+                <DashboardActionTableSkeletonRows
+                  rows={4}
+                  columns={SKELETON_COLUMNS}
+                  actionColumnClassName='w-20'
+                />
               </Tbody>
             </Table>
           </div>
@@ -363,9 +331,11 @@ function FailedDeliveriesTable({
                 </Tr>
               </Thead>
               <Tbody>
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <SkeletonRow key={i} />
-                ))}
+                <DashboardActionTableSkeletonRows
+                  rows={4}
+                  columns={SKELETON_COLUMNS}
+                  actionColumnClassName='w-20'
+                />
               </Tbody>
             </Table>
           </div>
@@ -422,10 +392,6 @@ function FailedDeliveriesTable({
     </Card>
   );
 }
-
-// ============================================================================
-// Main Component
-// ============================================================================
 
 export function DashboardActionTables({
   overdueDeliveries,

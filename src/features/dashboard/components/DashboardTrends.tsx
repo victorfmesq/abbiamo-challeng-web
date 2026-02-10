@@ -15,6 +15,7 @@ import {
   Cell,
 } from 'recharts';
 import { Card, CardContent } from '@/shared/components/Card';
+import { DashboardTrendsSkeleton } from '@/shared/components/DashboardSkeletons';
 
 const STATUS_COLORS: Record<string, string> = {
   PENDING: '#3f4247',
@@ -59,20 +60,6 @@ export interface DashboardTrendsProps {
   statusDistribution: StatusDistribution[];
   priorityDistribution?: PriorityDistribution[];
   isLoading?: boolean;
-}
-
-function LoadingSkeleton() {
-  return (
-    <div className='space-y-6 animate-pulse'>
-      {/* Trend Chart Skeleton */}
-      <div className='h-[300px] bg-slate-800 rounded-xl' />
-      {/* Distribution Charts Skeleton */}
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-        <div className='h-[250px] bg-slate-800 rounded-xl' />
-        <div className='h-[250px] bg-slate-800 rounded-xl' />
-      </div>
-    </div>
-  );
 }
 
 function EmptyState() {
@@ -149,7 +136,7 @@ export function DashboardTrends({
     return (
       <Card>
         <CardContent>
-          <LoadingSkeleton />
+          <DashboardTrendsSkeleton />
         </CardContent>
       </Card>
     );

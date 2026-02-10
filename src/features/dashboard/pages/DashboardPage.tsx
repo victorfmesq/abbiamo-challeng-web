@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button } from '@/shared/components';
+import { Button, ReloadButton } from '@/shared/components';
 import { DeliveryDetailsModal } from '@/features/deliveries/components/DeliveryDetailsModal';
 import {
   DashboardPeriodFilter,
@@ -11,7 +11,6 @@ import {
 import { useDashboardData } from '../hooks/useDashboardData';
 import type { DashboardPeriod, DashboardData } from '../types';
 
-// Default empty data structures
 const defaultKpis = {
   total: 0,
   inRoute: 0,
@@ -39,7 +38,6 @@ export function DashboardPage() {
 
   const { data, isLoading, error, refetch } = useDashboardData({ period });
 
-  // Use default values when data is not available
   const kpis = data?.kpis ?? defaultKpis;
   const riskMetrics = data?.riskMetrics ?? defaultRiskMetrics;
   const trendData = data?.trendData ?? defaultTrendData;
@@ -70,26 +68,10 @@ export function DashboardPage() {
 
   return (
     <div className='flex overflow-y-auto flex-col min-h-0 flex-1 gap-6 px-6 pb-6'>
-      {/* Period Filter */}
       <div className='sticky top-0 z-30 -mx-6 px-6 py-4 bg-slate-950/95 backdrop-blur-sm border-b border-slate-800 shadow-sm -mt-6 mb-4'>
         <div className='flex items-center justify-between gap-4'>
           <DashboardPeriodFilter value={period} onChange={setPeriod} />
-          <Button variant='ghost' size='sm' onClick={() => refetch()} aria-label='Atualizar dados'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              className='h-6 w-6'
-              fill='none'
-              viewBox='0 0 24 24'
-              stroke='currentColor'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'
-              />
-            </svg>
-          </Button>
+          <ReloadButton onClick={() => refetch()} />
         </div>
       </div>
 

@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 
-import { Card } from '@/shared/components/Card';
 import { Tr, Td } from '@/shared/components/Table';
 
 interface DashboardKpisSkeletonProps {
@@ -33,7 +32,10 @@ export function DashboardRiskCardsSkeleton() {
   return (
     <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
       {Array.from({ length: 3 }).map((_, index) => (
-        <Card key={index} className='animate-pulse bg-slate-900 border-slate-700 p-5'>
+        <div
+          key={index}
+          className='animate-pulse bg-slate-900 border border-slate-700 rounded-lg p-5'
+        >
           <div className='flex flex-col gap-3'>
             <div className='flex items-start justify-between gap-3'>
               <div className='flex min-w-0 flex-col gap-1'>
@@ -44,7 +46,7 @@ export function DashboardRiskCardsSkeleton() {
             </div>
             <div className='h-3 w-32 rounded bg-slate-700' />
           </div>
-        </Card>
+        </div>
       ))}
     </div>
   );

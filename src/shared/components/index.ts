@@ -15,6 +15,9 @@ export type { SelectProps } from './Select';
 
 export { Checkbox, type CheckboxState } from './Checkbox';
 
+export { ReloadButton } from './ReloadButton';
+export type { ReloadButtonProps } from './ReloadButton';
+
 export { Table, Thead, Tbody, Tr, Th, Td } from './Table';
 export type { TableProps, TrProps } from './Table';
 

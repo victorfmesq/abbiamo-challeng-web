@@ -1,5 +1,5 @@
 import { AlertCircle, Clock, RotateCw } from 'lucide-react';
-import { Card } from '@/shared/components';
+import { DashboardRiskCardsSkeleton } from '@/shared/components/DashboardSkeletons';
 import { MetricCard } from './MetricCard';
 
 export interface DashboardRiskCardsProps {
@@ -23,32 +23,9 @@ function formatAttempts(value: number): string {
   return value.toFixed(1);
 }
 
-function RiskCardSkeleton() {
-  return (
-    <Card className='animate-pulse bg-slate-900 border-slate-700 p-5'>
-      <div className='flex flex-col gap-3'>
-        <div className='flex items-start justify-between gap-3'>
-          <div className='flex min-w-0 flex-col gap-1'>
-            <div className='h-4 w-24 rounded bg-slate-700' />
-            <div className='h-8 w-16 rounded bg-slate-700' />
-          </div>
-          <div className='h-8 w-8 rounded bg-slate-700' />
-        </div>
-        <div className='h-3 w-32 rounded bg-slate-700' />
-      </div>
-    </Card>
-  );
-}
-
 export function DashboardRiskCards({ riskMetrics, isLoading = false }: DashboardRiskCardsProps) {
   if (isLoading) {
-    return (
-      <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
-        <RiskCardSkeleton />
-        <RiskCardSkeleton />
-        <RiskCardSkeleton />
-      </div>
-    );
+    return <DashboardRiskCardsSkeleton />;
   }
 
   return (

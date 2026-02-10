@@ -1,6 +1,6 @@
 # Abbiamo Challenge Web
 
-## 📦 Stack
+## Stack
 
 - React
 - Vite
@@ -13,7 +13,7 @@
 
 ---
 
-## ▶️ Como rodar o projeto localmente
+## Como rodar o projeto localmente
 
 ### Pré-requisitos
 

@@ -2,13 +2,6 @@ import api from '@/services/httpClient';
 import type { DashboardData, DashboardPeriod } from '../types';
 import type { DeliveryDto } from '@/features/deliveries/types';
 
-// ============================================================================
-// Date Utilities
-// ============================================================================
-
-/**
- * Calculate date range based on dashboard period
- */
 function getDateRangeForPeriod(period: DashboardPeriod): { dateFrom: string; dateTo: string } {
   const now = new Date();
   const dateTo = now.toISOString();
@@ -38,10 +31,6 @@ function getDateRangeForPeriod(period: DashboardPeriod): { dateFrom: string; dat
     dateTo,
   };
 }
-
-// ============================================================================
-// delivered_at Inference
-// ============================================================================
 
 /**
  * Infer delivered_at from timeline.
@@ -76,12 +65,10 @@ function inferDeliveredAt(delivery: DeliveryDto): string | null {
  * @returns true if delivery is overdue
  */
 function isDeliveryOverdue(delivery: DeliveryDto, deliveredAt: string | null): boolean {
-  // If delivered, it's not overdue
   if (deliveredAt !== null) {
     return false;
   }
 
-  // Check if expected delivery time has passed
   const now = new Date();
   const expectedDelivery = new Date(delivery.expected_delivery_at);
   return expectedDelivery < now;
@@ -99,10 +86,6 @@ function calculateDelayHours(delivery: DeliveryDto): number {
   return Math.max(0, diffMs / (1000 * 60 * 60)); // Convert to hours
 }
 
-// ============================================================================
-// Data Transformation
-// ============================================================================
-
 /**
  * Transform raw API deliveries into DashboardData
  * @param deliveries - Raw deliveries from API
@@ -113,7 +96,6 @@ function transformToDashboardData(
   deliveries: DeliveryDto[],
   period: DashboardPeriod
 ): DashboardData {
-  // Calculate delivered_at for each delivery
   const deliveriesWithDeliveredAt = deliveries.map((delivery) => ({
     ...delivery,
     deliveredAt: inferDeliveredAt(delivery),

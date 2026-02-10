@@ -36,7 +36,7 @@ export function DashboardPage() {
   const [selectedDeliveryId, setSelectedDeliveryId] = useState<string | null>(null);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
-  const { data, isLoading, error, refetch } = useDashboardData({ period });
+  const { data, isLoading, error, refetch, isFetching } = useDashboardData({ period });
 
   const kpis = data?.kpis ?? defaultKpis;
   const riskMetrics = data?.riskMetrics ?? defaultRiskMetrics;
@@ -71,7 +71,7 @@ export function DashboardPage() {
       <div className='sticky top-0 z-30 -mx-6 px-6 py-4 bg-slate-950/95 backdrop-blur-sm border-b border-slate-800 shadow-sm -mt-6 mb-4'>
         <div className='flex items-center justify-between gap-4'>
           <DashboardPeriodFilter value={period} onChange={setPeriod} />
-          <ReloadButton onClick={() => refetch()} />
+          <ReloadButton onClick={() => refetch()} isLoading={isFetching} />
         </div>
       </div>
 

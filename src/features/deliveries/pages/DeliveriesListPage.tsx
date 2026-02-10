@@ -41,7 +41,7 @@ export function DeliveriesListPage() {
   const [actionDeliveryIds, setActionDeliveryIds] = useState<string[]>([]);
   const [selectedDeliveryId, setSelectedDeliveryId] = useState<string | null>(null);
 
-  const { data, isLoading, isError, error, refetch } = useDeliveries(filters);
+  const { data, isLoading, isError, error, refetch, isFetching } = useDeliveries(filters);
 
   const handleFiltersChange = (newFilters: DeliveriesFilters) => {
     setFilters(newFilters);
@@ -182,7 +182,9 @@ export function DeliveriesListPage() {
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
         <h1 className='text-2xl font-bold text-slate-100'>Entregas</h1>
 
-        <Button onClick={() => refetch()}>Atualizar</Button>
+        <Button onClick={() => refetch()} loading={isFetching} disabled={isFetching}>
+          Atualizar
+        </Button>
       </div>
 
       {/* Filters - Stack on mobile, inline on desktop */}

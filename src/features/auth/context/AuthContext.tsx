@@ -14,7 +14,6 @@ type AuthContextValue = {
   signOut: () => void;
 };
 
-// Initialize state from localStorage synchronously
 const getInitialAuth = (): { status: AuthStatus; user: AuthUser | null } => {
   try {
     const token = authStorage.getToken();

@@ -19,10 +19,11 @@ const getInitialAuth = (): { status: AuthStatus; user: AuthUser | null } => {
   try {
     const token = authStorage.getToken();
     const savedUser = session.getUser();
+
     if (token && savedUser) {
       return { status: 'authenticated', user: savedUser };
     }
-    // No token found, user is not authenticated
+
     return { status: 'unauthenticated', user: null };
   } catch {
     return { status: 'unauthenticated', user: null };

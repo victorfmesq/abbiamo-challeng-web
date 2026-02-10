@@ -22,12 +22,14 @@ export function AppShell() {
               <nav className='ml-8 flex space-x-4 items-center'>
                 <Link
                   to='/dashboard'
+                  data-testid='nav-dashboard'
                   className='px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-slate-100 hover:bg-slate-800'
                 >
                   Dashboard
                 </Link>
                 <Link
                   to='/deliveries'
+                  data-testid='nav-deliveries'
                   className='px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-slate-100 hover:bg-slate-800'
                 >
                   Entregas

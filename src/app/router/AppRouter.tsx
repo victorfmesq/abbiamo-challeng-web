@@ -18,12 +18,10 @@ function DeliveryDetailPage() {
 export function CatchAllRoute() {
   const { isAuthenticated } = useAuth();
 
-  // Unauthenticated: redirect to login
   if (!isAuthenticated) {
     return <Navigate to='/login' replace />;
   }
 
-  // Authenticated: redirect to dashboard
   return <Navigate to='/dashboard' replace />;
 }
 

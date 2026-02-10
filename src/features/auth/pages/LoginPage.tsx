@@ -20,9 +20,9 @@ export function LoginPage() {
   } = useForm<LoginDto>();
 
   const onSubmit = async (data: LoginDto) => {
-    console.log('chamando onSubmit com', data);
     setIsLoading(true);
     setError(null);
+
     try {
       await signIn(data);
       navigate(from, { replace: true });
@@ -88,6 +88,7 @@ export function LoginPage() {
             <button
               type='submit'
               disabled={isLoading}
+              data-testid='login-submit'
               className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-slate-950 disabled:opacity-50'
             >
               {isLoading ? 'Entrando...' : 'Entrar'}

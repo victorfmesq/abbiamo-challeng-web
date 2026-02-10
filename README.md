@@ -1,151 +1,100 @@
 # Abbiamo Challenge Web
 
-Dashboard web para monitoramento de entregas logísticas, desenvolvido como desafio técnico frontend.
+## 📦 Stack
 
-## Stack
+- React
+- Vite
+- TypeScript
+- Tailwind CSS
+- TanStack React Query
+- React Hook Form
+- Vitest + Testing Library
+- Playwright
 
-- **React 18** + **Vite** + **TypeScript** (strict)
-- **Tailwind CSS**
-- **TanStack React Query**
-- **React Hook Form** (sem Zod)
-- **Vitest** + Testing Library (unit tests)
-- **Playwright** (E2E tests)
+---
 
-## Como Rodar
+## ▶️ Como rodar o projeto localmente
 
-### Instalação
+### Pré-requisitos
+
+- Node.js
+- npm (gerenciador utilizado no projeto)
+- **API backend do desafio rodando localmente**
+
+> ⚠️ Este projeto depende de uma API backend para funcionar corretamente.
+> Certifique-se de clonar e rodar a API conforme instruções fornecidas no desafio antes de iniciar o front-end.
+
+### Instalação de dependências
 
 ```bash
 npm install
 ```
 
-### Desenvolvimento
+### Subir a aplicação em modo desenvolvimento
 
 ```bash
 npm run dev
 ```
 
-A aplicação estará disponível em `http://localhost:5173`
+A aplicação ficará disponível em `http://localhost:5173` (porta padrão do Vite).
 
-### Testes Unitários
+---
+
+## 🌐 Aplicação em produção (deploy)
+
+- Front-end: [https://abbiamo-challeng-web.vercel.app/dashboard](https://abbiamo-challeng-web.vercel.app/dashboard)
+- API: [https://abbiamo-challenge-api.onrender.com/](https://abbiamo-challenge-api.onrender.com/)
+
+> ℹ️ **Observação sobre disponibilidade da API**
+> A API está hospedada no plano free do Render. Após períodos de inatividade, o primeiro acesso pode levar **30–60 segundos** para responder devido ao cold start.
+> Caso o login falhe inicialmente no front-end, aguarde alguns segundos e tente novamente.
+
+---
+
+## 🧪 Como rodar os testes
+
+### Testes unitários / integração (Vitest)
 
 ```bash
-npm run test        # executar testes uma vez
-npm run test:watch  # modo watch
+npm run test
 ```
 
-### Testes E2E
+Modo watch:
+
+```bash
+npm run test:watch
+```
+
+### Testes E2E (Playwright)
 
 ```bash
 npm run e2e
 ```
 
-### Linting e Formatação
+#### Observações sobre os testes E2E
 
-```bash
-npm run lint        # verificar erros
-npm run format      # formatar código
-```
+- Apenas o **smoke test** utiliza login real contra a API.
+- Os demais testes utilizam **mocks determinísticos via `page.route`**, garantindo:
+  - estabilidade em CI
+  - previsibilidade de dados
+  - menor flakiness em fluxos de UI
 
-## Configuração de Ambiente
-
-1. Copie o arquivo de exemplo:
-
-```bash
-cp .env.example .env.local
-```
-
-2. A API mock roda em `http://localhost:4000`
-
-### Variáveis de Ambiente
-
-| Variável            | Descrição       | Padrão (Dev)            |
-| ------------------- | --------------- | ----------------------- |
-| `VITE_API_BASE_URL` | URL base da API | `http://localhost:4000` |
+Essa abordagem equilibra validação de integração com confiabilidade dos testes.
 
 ---
 
-## Documentação do Projeto
+## ⚠️ Observações importantes sobre a implementação
 
-Este projeto utiliza uma documentação estruturada em `docs/kilo/` para orientar o desenvolvimento, especialmente agentes de IA stateless.
+- Arquitetura organizada por **feature**, com separação entre `app/`, `features/`, `shared/`, `services/` e `storage/`.
+- A camada `services/` global concentra infraestrutura (HTTP, auth, storage), enquanto regras de domínio permanecem nas services/hooks de cada feature.
+- Em alguns pontos há **redundâncias pontuais** ou arquivos que concentram mais de uma responsabilidade (lógica, renderização, constantes e tipagem).
+- Em um cenário de evolução contínua, esses pontos seriam naturalmente refinados com:
+  - extração de constantes
+  - separação mais rígida entre lógica e UI
+  - consolidação de padrões de componentes
 
-### Estrutura da Documentação
+### Sobre decisões práticas
 
-```
-docs/kilo/
-├── KILO_MASTER.md        # Ponto de entrada - OBRIGATÓRIO ler primeiro
-├── AI_OPERATION_MODE.md  # Regras de operação da IA
-├── ARCHITECTURE.md        # Arquitetura oficial do projeto
-├── TOOLS_AND_PATTERNS.md # Stack e padrões de código
-├── UX_UI_AND_ATOMIC.md   # Guidelines de UI/UX
-├── DESIGN_SYSTEM.md      # Sistema de design
-├── FLOWS.md              # Fluxos do produto
-└── TESTING.md            # Padrões de teste
-```
-
-### Regra Importante
-
-**docs/kilo/KILO_MASTER.md** é a **fonte de verdade** do projeto. Antes de implementar qualquer tarefa, agentes de IA DEVEM consultar este arquivo e os documentos referenciados nele.
-
----
-
-## Como Usar Agentes de IA Stateless
-
-Este projeto foi projetado para ser desenvolvido com auxílio de agentes de IA que não mantêm estado entre sessões.
-
-### Prompt de Ativação (OBRIGATÓRIO)
-
-**Todo novo prompt deve iniciar com:**
-
-```
-Use o projeto conforme definido em docs/kilo/KILO_MASTER.md.
-Implemente a tarefa abaixo seguindo estritamente essas regras.
-```
-
-### Comportamento Esperado do Agente
-
-Ao receber uma tarefa, o agente DEVE:
-
-1. **Ler KILO_MASTER.md** primeiro
-2. **Identificar documentos relevantes** para a tarefa
-3. **Consultar explicitamente** esses documentos antes de escrever código
-4. **Internlizar os arquivos lidos** - ao final de cada resposta, o agente deve mostrar silenciosamente no output os arquivos que leu e processou
-
-### Exemplo de Uso
-
-```
-Use o projeto conforme definido em docs/kilo/KILO_MASTER.md.
-Implemente a tarefa abaixo seguindo estritamente essas regras.
-
-Tarefa: Criar componente de login
-```
-
-### Output Silencioso de Auditoria
-
-Para fins de auditoria e rastreabilidade, o agente deve sempre indicar ao final de cada resposta quais arquivos foram lidos e internalizados:
-
-```
-╔══════════════════════════════════════════════════════════════╗
-║                    ARQUIVOS INTERNLIZADOS                    ║
-╠══════════════════════════════════════════════════════════════╣
-║  📄 docs/kilo/KILO_MASTER.md                                 ║
-║  📄 docs/kilo/ARCHITECTURE.md                                ║
-║  📄 src/features/auth/services/authService.ts                ║
-╚══════════════════════════════════════════════════════════════╝
-```
-
-Esta informação deve ser exibida de forma discreta ao final da resposta, sem interromper o fluxo principal da comunicação.
-
-### Regras Invioláveis para IA
-
-- ❌ NÃO usar Zod ou validação por schema
-- ❌ NÃO criar abstrações genéricas excessivas
-- ❌ NÃO misturar regra de negócio com UI
-- ❌ NÃO ser arquiteto do sistema
-- ❌ NÃO decidir stack
-- ❌ NÃO criar padrões novos
-
-- ✅ Criar testes unitários para funções agnósticas
-- ✅ Reutilizar componentes do `shared/`
-- ✅ Seguir arquitetura definida em `docs/kilo/`
-- ✅ Priorizar clareza sobre "arquitetura perfeita"
+- O projeto prioriza **fluxos funcionais completos**, previsibilidade de comportamento e testes estáveis.
+- Em alguns trechos, o design system não é seguido de forma absolutamente rigorosa.
+- Essa escolha foi consciente para garantir uma entrega funcional e navegável dentro do escopo proposto, mantendo clareza de arquitetura e testes confiáveis.

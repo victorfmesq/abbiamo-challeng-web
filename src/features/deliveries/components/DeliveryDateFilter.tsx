@@ -110,6 +110,7 @@ export function DeliveryDateFilter({ value, onChange, className = '' }: Delivery
             onChange={handleQuickFilterSelect}
             className='w-full sm:w-48'
             aria-label='Data'
+            data-testid='filter-date'
           >
             <option value=''>Data</option>
             {QUICK_FILTER_OPTIONS.map((option) => (

@@ -21,9 +21,13 @@ const statusOptions: { value: DeliveryStatus | 'all'; label: string }[] = [
 
 const SEARCH_DEBOUNCE_MS = 1000;
 
-/**
- * Convert quick filter to date range (YYYY-MM-DD format)
- */
+function formatLocalDate(date: Date) {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
 function quickFilterToDateRange(
   quickFilter: 'today' | 'tomorrow' | 'thisWeek' | null
 ): { dateFrom: string; dateTo: string } | null {
@@ -33,23 +37,21 @@ function quickFilterToDateRange(
   today.setHours(0, 0, 0, 0);
 
   const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setDate(today.getDate() + 1);
 
   const thisWeekStart = new Date(today);
-  thisWeekStart.setDate(today.getDate() - today.getDay()); // Monday
+  thisWeekStart.setDate(today.getDate() - today.getDay());
 
   const thisWeekEnd = new Date(today);
-  thisWeekEnd.setDate(today.getDate() + (6 - today.getDay())); // Sunday
-
-  const formatDate = (d: Date) => d.toISOString().split('T')[0];
+  thisWeekEnd.setDate(today.getDate() + (6 - today.getDay()));
 
   switch (quickFilter) {
     case 'today':
-      return { dateFrom: formatDate(today), dateTo: formatDate(today) };
+      return { dateFrom: formatLocalDate(today), dateTo: formatLocalDate(today) };
     case 'tomorrow':
-      return { dateFrom: formatDate(tomorrow), dateTo: formatDate(tomorrow) };
+      return { dateFrom: formatLocalDate(tomorrow), dateTo: formatLocalDate(tomorrow) };
     case 'thisWeek':
-      return { dateFrom: formatDate(thisWeekStart), dateTo: formatDate(thisWeekEnd) };
+      return { dateFrom: formatLocalDate(thisWeekStart), dateTo: formatLocalDate(thisWeekEnd) };
     default:
       return null;
   }
@@ -65,7 +67,6 @@ export function DeliveriesFilterBar({ filters, onFiltersChange }: DeliveriesFilt
     quickFilter: undefined,
   });
 
-  // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (searchTimeout) {
@@ -78,12 +79,10 @@ export function DeliveriesFilterBar({ filters, onFiltersChange }: DeliveriesFilt
     const value = e.target.value;
     setSearch(value);
 
-    // Clear existing timeout if user keeps typing
     if (searchTimeout) {
       clearTimeout(searchTimeout);
     }
 
-    // Set new timeout - will trigger onFiltersChange after 1.5s of no typing
     const timeout = setTimeout(() => {
       onFiltersChange({ ...filters, search: value || undefined, page: 1 });
     }, SEARCH_DEBOUNCE_MS);
@@ -100,7 +99,6 @@ export function DeliveriesFilterBar({ filters, onFiltersChange }: DeliveriesFilt
   const handleDateFilterChange = (value: DeliveryDateFilterValue) => {
     setDateFilter(value);
 
-    // Convert quick filter to date range
     const dateRange = value.quickFilter ? quickFilterToDateRange(value.quickFilter) : undefined;
 
     onFiltersChange({
@@ -115,7 +113,6 @@ export function DeliveriesFilterBar({ filters, onFiltersChange }: DeliveriesFilt
     setSearch('');
     setStatus('all');
     setDateFilter({ dateFrom: '', dateTo: '', quickFilter: undefined });
-    // Clear any pending search timeout
     if (searchTimeout) {
       clearTimeout(searchTimeout);
       setSearchTimeout(null);
@@ -138,10 +135,11 @@ export function DeliveriesFilterBar({ filters, onFiltersChange }: DeliveriesFilt
             placeholder='Buscar por código ou destinatário...'
             value={search}
             onChange={handleSearchChange}
+            aria-label='Buscar entregas'
           />
         </div>
         <div className='w-full sm:w-56'>
-          <Select value={status} onChange={handleStatusChange}>
+          <Select value={status} onChange={handleStatusChange} aria-label='Status'>
             {statusOptions.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}

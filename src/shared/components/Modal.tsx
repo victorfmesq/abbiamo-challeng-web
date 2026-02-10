@@ -20,6 +20,8 @@ export interface ModalProps {
   showCloseButton?: boolean;
   /** Disable body scroll when modal is open */
   disableBodyScroll?: boolean;
+  /** Optional test id for E2E selectors */
+  dataTestId?: string;
 }
 
 const sizeStyles = {
@@ -37,6 +39,7 @@ export function Modal({
   size = 'md',
   showCloseButton = true,
   disableBodyScroll = true,
+  dataTestId,
 }: ModalProps) {
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -149,6 +152,7 @@ export function Modal({
     <div
       className='fixed inset-0 z-50 flex items-center justify-center'
       role='presentation'
+      data-testid={dataTestId}
     >
       {/* Overlay */}
       <div
@@ -186,16 +190,19 @@ export function Modal({
               aria-label='Fechar modal'
             >
               <svg className='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M6 18L18 6M6 6l12 12' />
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M6 18L18 6M6 6l12 12'
+                />
               </svg>
             </button>
           )}
         </div>
 
         {/* Body */}
-        <div className='flex-1 overflow-auto px-6 py-4'>
-          {children}
-        </div>
+        <div className='flex-1 overflow-auto px-6 py-4'>{children}</div>
 
         {/* Footer */}
         {footer && (

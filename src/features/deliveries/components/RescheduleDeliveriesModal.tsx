@@ -91,6 +91,7 @@ export function RescheduleDeliveriesModal({
           confirmLabel='Reagendar'
         />
       }
+      dataTestId='reschedule-modal'
     >
       <div className='space-y-4'>
         {/* Context info */}

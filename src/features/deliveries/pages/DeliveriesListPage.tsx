@@ -1,17 +1,5 @@
-import { useState, useMemo } from 'react';
-import {
-  Button,
-  Badge,
-  DataTableWithLayout,
-  type DataTableColumn,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Checkbox,
-} from '@/shared/components';
+import { useState, useMemo, useCallback } from 'react';
+import { Button, Badge, DataTableWithLayout, type DataTableColumn } from '@/shared/components';
 import { DeliveryDetailsModal } from '../components/DeliveryDetailsModal';
 import { DeliveriesFilterBar } from '../components/DeliveriesFilterBar';
 import { BulkActionsDropdown } from '../components/BulkActionsDropdown';
@@ -40,25 +28,6 @@ const statusConfig: Record<
   DELAYED: { variant: 'warning', label: 'Atrasado' },
   FAILED: { variant: 'danger', label: 'Falhou' },
 };
-
-const columns: DataTableColumn<DeliveryDto>[] = [
-  { key: 'tracking_code', header: 'Código', cellClassName: 'font-mono text-sm' },
-  { key: 'recipient', header: 'Destinatário', render: (row) => row.recipient.name },
-  {
-    key: 'status',
-    header: 'Status',
-    render: (row) => {
-      const status = statusConfig[row.status];
-      return <Badge variant={status.variant}>{status.label}</Badge>;
-    },
-  },
-  {
-    key: 'expected_delivery_at',
-    header: 'Previsão',
-    cellClassName: 'text-slate-400',
-    render: (row) => formatIsoToLocale(row.expected_delivery_at),
-  },
-];
 
 export function DeliveriesListPage() {
   const [filters, setFilters] = useState<DeliveriesFilters>(defaultFilters);
@@ -141,64 +110,74 @@ export function DeliveriesListPage() {
     setSelectedIds(new Set());
   };
 
-  const handleOpenReschedule = (ids: string[]) => {
+  const handleOpenReschedule = useCallback((ids: string[]) => {
     setActionDeliveryIds(ids);
     setRescheduleModalOpen(true);
-  };
+  }, []);
 
-  const handleOpenAssignDriver = (ids: string[]) => {
+  const handleOpenAssignDriver = useCallback((ids: string[]) => {
     setActionDeliveryIds(ids);
     setAssignDriverModalOpen(true);
-  };
+  }, []);
 
-  const handleOpenPriority = (ids: string[]) => {
+  const handleOpenPriority = useCallback((ids: string[]) => {
     setActionDeliveryIds(ids);
     setPriorityModalOpen(true);
-  };
+  }, []);
+
+  const columns = useMemo<DataTableColumn<DeliveryDto>[]>(
+    () => [
+      {
+        key: 'tracking_code',
+        header: 'Código',
+        cellClassName: 'font-mono text-sm',
+        render: (row) => (
+          <span data-testid={`tracking-${row.id}`} className='font-mono text-sm'>
+            {row.tracking_code}
+          </span>
+        ),
+      },
+      { key: 'recipient', header: 'Destinatário', render: (row) => row.recipient.name },
+      {
+        key: 'status',
+        header: 'Status',
+        render: (row) => {
+          const status = statusConfig[row.status];
+          return <Badge variant={status.variant}>{status.label}</Badge>;
+        },
+      },
+      {
+        key: 'expected_delivery_at',
+        header: 'Previsão',
+        cellClassName: 'text-slate-400',
+        render: (row) => formatIsoToLocale(row.expected_delivery_at),
+      },
+      {
+        key: 'row_actions',
+        header: '',
+        cellClassName: 'w-12',
+        render: (row) => (
+          <div onClick={(event) => event.stopPropagation()}>
+            <RowActionsMenu
+              deliveryId={row.id}
+              onOpenReschedule={handleOpenReschedule}
+              onOpenAssignDriver={handleOpenAssignDriver}
+              onOpenPriority={handleOpenPriority}
+            />
+          </div>
+        ),
+      },
+    ],
+    [handleOpenAssignDriver, handleOpenPriority, handleOpenReschedule]
+  );
 
   // Get deliveries for preview in modals
   const getDeliveriesForPreview = (ids: string[]): DeliveryDto[] => {
     return data?.data.filter((d) => ids.includes(d.id)) || [];
   };
 
-  // Render table row
-  const renderRow = (delivery: DeliveryDto) => {
-    const status = statusConfig[delivery.status];
-    const isSelected = selectedIds.has(delivery.id);
-
-    return (
-      <Tr
-        key={delivery.id}
-        onClick={() => handleRowClick(delivery)}
-        className={'cursor-pointer group hover:bg-slate-800/50'}
-      >
-        <Td onClick={(e) => e.stopPropagation()}>
-          <Checkbox
-            state={isSelected ? 'full' : 'none'}
-            onChange={() => handleToggleSelect(delivery.id)}
-            aria-label={`Selecionar entrega ${delivery.tracking_code}`}
-          />
-        </Td>
-        <Td className='font-mono text-sm'>{delivery.tracking_code}</Td>
-        <Td>{delivery.recipient.name}</Td>
-        <Td>
-          <Badge variant={status.variant}>{status.label}</Badge>
-        </Td>
-        <Td className='text-slate-400'>{formatIsoToLocale(delivery.expected_delivery_at)}</Td>
-        <Td onClick={(e) => e.stopPropagation()}>
-          <RowActionsMenu
-            deliveryId={delivery.id}
-            onOpenReschedule={handleOpenReschedule}
-            onOpenAssignDriver={handleOpenAssignDriver}
-            onOpenPriority={handleOpenPriority}
-          />
-        </Td>
-      </Tr>
-    );
-  };
-
   return (
-    <div className='flex flex-col px-4 py-6 flex-1 min-h-0 gap-6'>
+    <div className='flex flex-col px-4 py-6 flex-1 min-h-0 gap-6' data-testid='deliveries-page'>
       {/* Header */}
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
         <h1 className='text-2xl font-bold text-slate-100'>Entregas</h1>
@@ -222,6 +201,8 @@ export function DeliveriesListPage() {
           selectAllState={selectAllState}
           onToggleSelectAll={handleToggleSelectAll}
           selectedCount={selectedIds.size}
+          dataTestId='e2e-deliveries-table'
+          containerClassName='min-h-0'
           pagination={
             data?.meta
               ? {
@@ -248,22 +229,7 @@ export function DeliveriesListPage() {
               />
             )
           }
-        >
-          {/* Custom table content with row actions column */}
-          <Table>
-            <Thead>
-              <Tr>
-                <Th className='w-12'></Th>
-                <Th>Código</Th>
-                <Th>Destinatário</Th>
-                <Th>Status</Th>
-                <Th>Data</Th>
-                <Th className='w-12'></Th>
-              </Tr>
-            </Thead>
-            <Tbody>{data?.data.map(renderRow)}</Tbody>
-          </Table>
-        </DataTableWithLayout>
+        />
       </div>
 
       {/* Modals */}

@@ -225,6 +225,8 @@ export interface DataTableWithLayoutProps<T> {
   loadingMessage?: string;
   /** Custom class name for the container */
   containerClassName?: string;
+  /** Explicit test id for the container */
+  dataTestId?: string;
   /** Custom table content (overrides default table rendering) */
   children?: ReactElement;
 }
@@ -254,6 +256,7 @@ export function DataTableWithLayout<T>({
 
   loadingMessage = 'Carregando...',
   containerClassName = '',
+  dataTestId,
   children,
 }: DataTableWithLayoutProps<T>) {
   const hasSelection = onToggleSelect !== undefined;
@@ -267,7 +270,10 @@ export function DataTableWithLayout<T>({
   }
 
   return (
-    <Card className={`flex flex-col min-h-0 overflow-hidden ${containerClassName}`}>
+    <Card
+      className={`flex flex-col min-h-0 overflow-hidden ${containerClassName}`}
+      data-testid={dataTestId}
+    >
       {isLoading ? (
         <DataTableLoading message={loadingMessage} />
       ) : (

@@ -7,6 +7,7 @@ export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement
   state?: CheckboxState;
   label?: string;
   indeterminate?: boolean;
+  dataTestId?: string;
 }
 
 const baseStyles = `
@@ -41,6 +42,7 @@ export function Checkbox({
   label,
   indeterminate,
   className = '',
+  dataTestId,
   ...props
 }: CheckboxProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -61,6 +63,7 @@ export function Checkbox({
           type='checkbox'
           checked={state === 'full'}
           className='sr-only'
+          data-testid={dataTestId}
           {...props}
         />
         <svg

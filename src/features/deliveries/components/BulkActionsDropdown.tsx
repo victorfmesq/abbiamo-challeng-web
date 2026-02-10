@@ -131,6 +131,7 @@ export function BulkActionsDropdown({
         onClick={() => setIsOpen(!isOpen)}
         className='flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 hover:cursor-pointer text-white rounded-lg shadow-lg transition-all duration-200'
         aria-label={`Abrir menu de ações para ${selectedIds.length} entregas selecionadas`}
+        data-testid='bulk-actions-open'
         aria-expanded={isOpen}
         aria-haspopup='menu'
       >
@@ -176,6 +177,7 @@ export function BulkActionsDropdown({
               onClick={() => handleAction('reschedule')}
               className='w-full flex items-center gap-3 px-3 py-2.5 text-left text-slate-200 hover:bg-slate-800 hover:cursor-pointer rounded-lg transition-colors'
               role='menuitem'
+              data-testid='bulk-action-reschedule'
             >
               <RescheduleIcon />
               <div className='flex-1 min-w-0'>
@@ -200,6 +202,7 @@ export function BulkActionsDropdown({
               onClick={() => handleAction('update-priority')}
               className='w-full flex items-center gap-3 px-3 py-2.5 text-left text-slate-200 hover:bg-slate-800 hover:cursor-pointer rounded-lg transition-colors'
               role='menuitem'
+              data-testid='bulk-action-update-priority'
             >
               <UpdatePriorityIcon />
               <div className='flex-1 min-w-0'>

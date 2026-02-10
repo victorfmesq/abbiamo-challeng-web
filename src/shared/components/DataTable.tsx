@@ -184,6 +184,7 @@ export function DataTable<T>({
                     state={isSelected ? 'full' : 'none'}
                     onChange={() => onToggleSelect!(rowId)}
                     aria-label={`Selecionar registro ${rowId}`}
+                    dataTestId={`row-select-${rowId}`}
                   />
                 </Td>
               )}

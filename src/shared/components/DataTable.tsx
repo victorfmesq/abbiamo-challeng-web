@@ -176,7 +176,7 @@ export function DataTable<T>({
             <Tr
               key={rowId || index}
               onClick={() => onRowClick?.(row)}
-              className={onRowClick ? 'cursor-pointer' : ''}
+              className={onRowClick ? 'cursor-pointer group' : 'group'}
             >
               {hasSelection && (
                 <Td onClick={(e) => e.stopPropagation()}>

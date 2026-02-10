@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import type { LoginDto } from '../types';
+import { toastError } from '@/shared/utils/toast';
 
 export function LoginPage() {
   const { signIn } = useAuth();
@@ -32,6 +33,10 @@ export function LoginPage() {
       } else {
         setError('Erro ao fazer login. Tente novamente.');
       }
+
+      toastError(err, 'Falha ao entrar. Verifique suas credenciais e tente novamente.', {
+        id: 'auth:login:error',
+      });
     } finally {
       setIsLoading(false);
     }

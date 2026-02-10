@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getDashboardData } from '../services/dashboardService';
 import type { DashboardData, DashboardPeriod } from '../types';
+import { toastError } from '@/shared/utils/toast';
 
 // ============================================================================
 // Query Keys
@@ -75,6 +77,12 @@ export function useDashboardData({ period }: UseDashboardDataOptions) {
   const refetch = async () => {
     return query.refetch();
   };
+
+  useEffect(() => {
+    if (query.isError) {
+      toastError(query.error, 'Falha ao carregar dashboard.', { id: 'query:dashboard:error' });
+    }
+  }, [query.isError, query.error]);
 
   return {
     // React Query state

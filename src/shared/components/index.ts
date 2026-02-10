@@ -28,6 +28,17 @@ export type {
 } from './DataTable';
 
 export {
+  DashboardKpisSkeleton,
+  DashboardTrendsSkeleton,
+  DashboardRiskCardsSkeleton,
+  DashboardActionTableSkeletonRows,
+} from './DashboardSkeletons';
+export type {
+  DashboardTableSkeletonColumn,
+  DashboardActionTableSkeletonRowsProps,
+} from './DashboardSkeletons';
+
+export {
   DataTableWithLayout,
   DataTableToolbar,
   DataTableFooter,
